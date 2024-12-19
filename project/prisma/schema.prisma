@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./parking.db"
+}
+
+// Enums for better type safety
+enum UserRole {
+  DRIVER
+  PARKING_MANAGER
+  ADMIN
+}
+
+enum SpotType {
+  REGULAR
+  DISABLED
+  EV_CHARGING
+}
+
+enum SpotStatus {
+  AVAILABLE
+  RESERVED
+  OCCUPIED
+}
+
+enum ReservationStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum PricingModel {
+  FIXED
+  DYNAMIC
+  TIME_BASED
+}
+
+// Models
+model User {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  name         String
+  password     String
+  phone        String?
+  licensePlate String?
+  role         UserRole       @default(DRIVER)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  reservations Reservation[]
+  notifications Notification[]
+}
+
+model ParkingLot {
+  id            Int           @id @default(autoincrement())
+  name          String
+  location      String
+  capacity      Int
+  pricingModel  PricingModel  @default(FIXED)
+  baseRate      Float         @default(0)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  parkingSpots  ParkingSpot[]
+}
+
+model ParkingSpot {
+  id            Int           @id @default(autoincrement())
+  parkingLotId  Int
+  spotNumber    String
+  spotType      SpotType      @default(REGULAR)
+  status        SpotStatus    @default(AVAILABLE)
+  pricePerHour  Float
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  parkingLot    ParkingLot    @relation(fields: [parkingLotId], references: [id])
+  reservations  Reservation[]
+}
+
+model Reservation {
+  id            Int               @id @default(autoincrement())
+  userId        Int
+  spotId        Int
+  startTime     DateTime
+  endTime       DateTime
+  status        ReservationStatus @default(PENDING)
+  totalAmount   Float?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  user          User              @relation(fields: [userId], references: [id])
+  parkingSpot   ParkingSpot       @relation(fields: [spotId], references: [id])
+  payment       Payment?
+}
+
+model Payment {
+  id             Int           @id @default(autoincrement())
+  reservationId  Int           @unique
+  amount         Float
+  paymentTime    DateTime      @default(now())
+  status         PaymentStatus @default(PENDING)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  reservation    Reservation   @relation(fields: [reservationId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String
+  read      Boolean  @default(false)
+  sentAt    DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
