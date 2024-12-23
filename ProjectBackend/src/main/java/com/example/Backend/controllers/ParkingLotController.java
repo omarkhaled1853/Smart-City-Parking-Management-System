@@ -76,6 +76,14 @@ public class ParkingLotController {
             throw new RuntimeException("Error fetching parking spots: " + e.getMessage());
         }
     }
+    @GetMapping("/parkingspots/{id}")
+    public List<ParkingSpotDTO> getSpecificParkingSpots(@PathVariable int id) {
+        try {
+            return parkingSpotRepository.getSpecificParkingSpots(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching parking spots: " + e.getMessage());
+        }
+    }
 
     @PutMapping("/parkingspots/{id}/status")
     public String updateParkingSpotStatus(@PathVariable int id, @RequestParam String status) {
@@ -100,7 +108,7 @@ public class ParkingLotController {
     @PutMapping("/parkingspots/{spotID}/pricing")
     public String updateSpotPricing(@PathVariable int spotID, @RequestParam double demandFactor) {
         try {
-            // Call the service method to update pricing 
+            // Call the service method to update pricing
             return parkingLotService.updateSpotPricing(spotID, demandFactor);
         } catch (Exception e) {
             return "Error: " + e.getMessage();

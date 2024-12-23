@@ -10,11 +10,11 @@ public class ParkingSpotDTO {
     private BigDecimal pricePerHour;
 
     public enum SpotType {
-        REGULAR, DISABLED, EVCharging
+        Regular, Disabled, EVCharging
     }
 
     public enum Status {
-        AVAILABLE, RESERVED, OCCUPIED
+        Available, Reserved, Occupied
     }
 
     // Getters and Setters

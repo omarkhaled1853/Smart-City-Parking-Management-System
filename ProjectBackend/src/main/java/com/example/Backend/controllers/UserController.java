@@ -15,7 +15,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/signup")
-    @CrossOrigin(origins = "http://localhost:5173") // Allow specific origin
+
     public ResponseEntity<String> signup(@RequestBody SignupDTO signupDTO) {
         if (signupDTO == null || signupDTO.getEmail() == null || signupDTO.getPassword() == null ||signupDTO.getName()==null ||signupDTO.getPhone()==null ||signupDTO.getRole()==null) {
             return ResponseEntity.badRequest().body("Request body or required fields are missing.");
@@ -28,7 +28,6 @@ public class UserController {
     }
     
     @PostMapping("/login")
-    @CrossOrigin(origins = "http://localhost:5173") // Allow specific origin
     public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
         if (loginDTO == null || loginDTO.getEmail() == null || loginDTO.getPassword() == null) {
         return ResponseEntity.badRequest().body("Request body or required fields are missing.");

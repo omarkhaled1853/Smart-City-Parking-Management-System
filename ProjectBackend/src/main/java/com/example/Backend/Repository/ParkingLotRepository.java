@@ -31,7 +31,7 @@ public class ParkingLotRepository {
     }
 
     public List<ParkingLotDTO> getAllParkingLots() throws SQLException {
-        String query = "SELECT * FROM parkinglot";
+        String query = "SELECT * FROM ParkingLot";
         List<ParkingLotDTO> parkingLots = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection();

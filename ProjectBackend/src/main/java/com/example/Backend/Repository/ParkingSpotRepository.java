@@ -50,6 +50,35 @@ public class ParkingSpotRepository {
 
         return parkingSpots;
     }
+    public List<ParkingSpotDTO> getSpecificParkingSpots(int id) throws SQLException {
+        String query = "SELECT * FROM parkingspot WHERE ParkingLotID = ?";
+        List<ParkingSpotDTO> parkingSpots = new ArrayList<>();
+
+        // Use PreparedStatement instead of Statement
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            // Set the parameter for the query
+            preparedStatement.setInt(1, id);
+
+            // Execute the query
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    // Map result set to ParkingSpotDTO
+                    ParkingSpotDTO parkingSpot = new ParkingSpotDTO();
+                    parkingSpot.setSpotID(resultSet.getInt("SpotID"));
+                    parkingSpot.setParkingLotID(resultSet.getInt("ParkingLotID"));
+                    parkingSpot.setSpotType(ParkingSpotDTO.SpotType.valueOf(resultSet.getString("SpotType")));
+                    parkingSpot.setStatus(ParkingSpotDTO.Status.valueOf(resultSet.getString("Status")));
+                    parkingSpot.setPricePerHour(resultSet.getBigDecimal("PricePerHour"));
+
+                    parkingSpots.add(parkingSpot);
+                }
+            }
+        }
+
+        return parkingSpots;
+    }
 
     public void updateParkingSpotStatus(int spotID, ParkingSpotDTO.Status status) throws SQLException {
         String query = "UPDATE parkingspot SET Status = ? WHERE SpotID = ?";
