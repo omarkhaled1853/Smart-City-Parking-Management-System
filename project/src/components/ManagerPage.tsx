@@ -3,7 +3,7 @@ import axios from "axios";
 
 export function ManagerPage() {
   const [parkingLots, setParkingLots] = useState<
-    { id: number; name: string; location: string; spots: { id: number; type: string; status: string; price: number; duration: string }[] }[]
+    { parkingLotID: number; name: string; location: string; capacity: number; pricingModel: string; spots?: { id: number; type: string; status: string; price: number; duration: string }[] }[]
   >([]);
   const [reports, setReports] = useState("");
   const [editModal, setEditModal] = useState<{
@@ -12,7 +12,7 @@ export function ManagerPage() {
     spot: { id: number; type: string; status: string; price: number; duration: string } | null;
   }>({ show: false, lotId: null, spot: null });
 
-  // Fetch Parking Lots
+  // Fetch Parking Lots and their spots
   useEffect(() => {
     fetchParkingLots();
   }, []);
@@ -20,10 +20,33 @@ export function ManagerPage() {
   const fetchParkingLots = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/manager/parkinglots");
-      setParkingLots(response.data);
+      const lots = response.data;
+      setParkingLots(lots);
+
+      // For each parking lot, fetch the parking spots
+      lots.forEach(async (lot: { parkingLotID: number; name: string; location: string; capacity: number; pricingModel: string; spots?: { id: number; type: string; status: string; price: number; duration: string }[] }) => {
+        await fetchParkingSpots(lot.parkingLotID);
+      });
+
       console.log("Parking lots fetched successfully!");
+      console.log(lots);
     } catch (error) {
       console.error("Error fetching parking lots:", (error as Error).message);
+    }
+  };
+
+  const fetchParkingSpots = async (lotId: number) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/manager/parkingspots?lotId=${lotId}`);
+      // Find the parking lot and update its spots
+      setParkingLots((prevLots) =>
+        prevLots.map((lot) =>
+          lot.parkingLotID === lotId ? { ...lot, spots: response.data } : lot
+        )
+      );
+      console.log(`Parking spots for lot ${lotId} fetched successfully!`);
+    } catch (error) {
+      console.error(`Error fetching parking spots for lot ${lotId}:`, (error as Error).message);
     }
   };
 
@@ -40,7 +63,7 @@ export function ManagerPage() {
       });
       alert(`Spot #${id} updated successfully!`);
       setEditModal({ show: false, lotId: null, spot: null });
-      fetchParkingLots();
+      fetchParkingLots(); // Refresh parking lots and spots
       console.log("Spot updated successfully!");
     } catch (error) {
       console.error("Error updating spot:", (error as Error).message);
@@ -62,37 +85,42 @@ export function ManagerPage() {
       <h1 className="text-3xl font-bold text-blue-700 mb-6">Manager Dashboard</h1>
 
       {parkingLots.map((lot) => (
-        <section key={lot.id} className="mb-8 bg-white shadow-md rounded p-6">
+        <section key={lot.parkingLotID} className="mb-8 bg-white shadow-md rounded p-6">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            {lot.name} - {lot.location}
+            {lot.name} - {lot.location} (Capacity: {lot.capacity}, Pricing: {lot.pricingModel})
           </h2>
-          <ul className="space-y-4">
-            {lot.spots.map((spot) => (
-              <li key={spot.id} className="border border-gray-300 rounded p-4 bg-gray-50 flex justify-between items-center">
-                <div className="text-sm text-gray-700">
-                  <span className="font-semibold">Spot #: </span>{spot.id} &nbsp;|&nbsp; 
-                  <span className="font-semibold">Type: </span>{spot.type} &nbsp;|&nbsp; 
-                  <span className="font-semibold">Status: </span>
-                  <span
-                    className={
-                      spot.status === "available" ? "text-green-500 font-medium" : "text-red-500 font-medium"
-                    }
+          {/* Check if spots are available */}
+          {lot.spots && lot.spots.length > 0 ? (
+            <ul className="space-y-4">
+              {lot.spots.map((spot) => (
+                <li key={spot.id} className="border border-gray-300 rounded p-4 bg-gray-50 flex justify-between items-center">
+                  <div className="text-sm text-gray-700">
+                    <span className="font-semibold">Spot #: </span>{spot.id} &nbsp;|&nbsp; 
+                    <span className="font-semibold">Type: </span>{spot.type} &nbsp;|&nbsp; 
+                    <span className="font-semibold">Status: </span>
+                    <span
+                      className={
+                        spot.status === "available" ? "text-green-500 font-medium" : "text-red-500 font-medium"
+                      }
+                    >
+                      {spot.status}
+                    </span>
+                    &nbsp;|&nbsp; 
+                    <span className="font-semibold">Price: </span>${spot.price}/hour &nbsp;|&nbsp; 
+                    <span className="font-semibold">Duration: </span>{spot.duration}
+                  </div>
+                  <button
+                    onClick={() => setEditModal({ show: true, lotId: lot.parkingLotID, spot })}
+                    className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 text-sm"
                   >
-                    {spot.status}
-                  </span>
-                  &nbsp;|&nbsp; 
-                  <span className="font-semibold">Price: </span>${spot.price}/hour &nbsp;|&nbsp; 
-                  <span className="font-semibold">Duration: </span>{spot.duration}
-                </div>
-                <button
-                  onClick={() => setEditModal({ show: true, lotId: lot.id, spot })}
-                  className="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 text-sm"
-                >
-                  Edit
-                </button>
-              </li>
-            ))}
-          </ul>
+                    Edit
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No parking spots available</p>
+          )}
         </section>
       ))}
 
@@ -179,12 +207,15 @@ export function ManagerPage() {
                 <button
                   type="button"
                   onClick={() => setEditModal({ show: false, lotId: null, spot: null })}
-                  className="bg-gray-300 text-gray-700 py-1 px-3 rounded mr-2"
+                  className="bg-gray-300 text-gray-700 py-1 px-4 rounded hover:bg-gray-400 mr-2"
                 >
                   Cancel
                 </button>
-                <button type="submit" className="bg-blue-500 text-white py-1 px-3 rounded">
-                  Save
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600"
+                >
+                  Save Changes
                 </button>
               </div>
             </form>

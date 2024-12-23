@@ -8,7 +8,7 @@ public class ParkingLotDTO {
     private PricingModel pricingModel;
 
     public enum PricingModel {
-        Static, DYNAMIC
+        Static, Dynamic
     }
 
     // Getters and Setters
