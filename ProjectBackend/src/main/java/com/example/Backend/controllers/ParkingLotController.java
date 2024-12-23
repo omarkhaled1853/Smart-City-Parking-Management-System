@@ -100,7 +100,7 @@ public class ParkingLotController {
     @PutMapping("/parkingspots/{spotID}/pricing")
     public String updateSpotPricing(@PathVariable int spotID, @RequestParam double demandFactor) {
         try {
-            // Call the service method to update pricing
+            // Call the service method to update pricing 
             return parkingLotService.updateSpotPricing(spotID, demandFactor);
         } catch (Exception e) {
             return "Error: " + e.getMessage();

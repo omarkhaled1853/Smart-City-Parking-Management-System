@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { LogIn } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 
 export function LoginForm() {
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,6 +17,10 @@ export function LoginForm() {
       });
       if (response.ok) {
         console.log('Login successful!');
+        navigate('/manager'); // Navigate to manager page on successful login
+
+
+
       } else {
         console.error('Login failed');
       }
