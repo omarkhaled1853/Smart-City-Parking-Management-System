@@ -68,18 +68,18 @@ public class ParkingLotController {
         }
     }
 
+    // @GetMapping("/parkingspots")
+    // public List<ParkingSpotDTO> getAllParkingSpots() {
+    //     try {
+    //         return parkingSpotRepository.getAllParkingSpots();
+    //     } catch (Exception e) {
+    //         throw new RuntimeException("Error fetching parking spots: " + e.getMessage());
+    //     }
+    // }
     @GetMapping("/parkingspots")
-    public List<ParkingSpotDTO> getAllParkingSpots() {
+    public List<ParkingSpotDTO> getSpecificParkingSpots(@RequestParam(required = false) Integer lotId) {
         try {
-            return parkingSpotRepository.getAllParkingSpots();
-        } catch (Exception e) {
-            throw new RuntimeException("Error fetching parking spots: " + e.getMessage());
-        }
-    }
-    @GetMapping("/parkingspots/{id}")
-    public List<ParkingSpotDTO> getSpecificParkingSpots(@PathVariable int id) {
-        try {
-            return parkingSpotRepository.getSpecificParkingSpots(id);
+            return parkingSpotRepository.getSpecificParkingSpots(lotId);
         } catch (Exception e) {
             throw new RuntimeException("Error fetching parking spots: " + e.getMessage());
         }
@@ -88,7 +88,7 @@ public class ParkingLotController {
     @PutMapping("/parkingspots/{id}/status")
     public String updateParkingSpotStatus(@PathVariable int id, @RequestParam String status) {
         try {
-            ParkingSpotDTO.Status newStatus = ParkingSpotDTO.Status.valueOf(status.toUpperCase());
+            ParkingSpotDTO.Status newStatus = ParkingSpotDTO.Status.valueOf(status);
             parkingSpotRepository.updateParkingSpotStatus(id, newStatus);
             return "Parking spot status updated successfully.";
         } catch (Exception e) {
@@ -96,15 +96,6 @@ public class ParkingLotController {
         }
     }
 
-    @DeleteMapping("/parkingspots/{id}")
-    public String deleteParkingSpot(@PathVariable int id) {
-        try {
-            parkingSpotRepository.deleteParkingSpot(id);
-            return "Parking spot deleted successfully.";
-        } catch (Exception e) {
-            return "Error: " + e.getMessage();
-        }
-    }
     @PutMapping("/parkingspots/{spotID}/pricing")
     public String updateSpotPricing(@PathVariable int spotID, @RequestParam double demandFactor) {
         try {
@@ -115,6 +106,18 @@ public class ParkingLotController {
         }
     }
 
+    
+
+    @DeleteMapping("/parkingspots/{id}")
+    public String deleteParkingSpot(@PathVariable int id) {
+        try {
+            parkingSpotRepository.deleteParkingSpot(id);
+            return "Parking spot deleted successfully.";
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+   
     // Report Endpoints
     @GetMapping("/reports/parkinglots")
     public String generateParkingLotReport() {
