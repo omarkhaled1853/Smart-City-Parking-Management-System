@@ -9,7 +9,8 @@ import com.example.Backend.DTO.SignupDTO;
 import com.example.Backend.Repository.UserRepository;
 
 @Service
-public class UserService {
+public class 
+UserService {
     
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -70,6 +71,18 @@ public class UserService {
 
     public boolean loginUser(LoginDTO loginDTO) {
         // Authenticate user
-        return userRepository.authenticateUser(loginDTO.getEmail(), loginDTO.getPassword());
+        if(userRepository.authenticateUser(loginDTO.getEmail(), loginDTO.getPassword())){
+            int userID = userRepository.getUserIdByEmail(loginDTO.getEmail());
+            String roleName = loginDTO.getRole(); // The role passed from the frontend
+            Integer roleId = userRepository.getRoleIdByRoleName(roleName); // Get RoleID for the role
+            // Check if the user already has the role
+            if (userRepository.roleExists(userID, roleId)) {
+                return true;
+            }
+            return false;
+        }
+        else{
+            return false;
+        }
     }
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserPlus } from 'lucide-react';
 import type { SignupFormData } from '../../types/auth';
+import { useNavigate } from 'react-router-dom';
 
 export function SignupForm() {
   const [formData, setFormData] = useState<SignupFormData>({
@@ -11,6 +12,7 @@ export function SignupForm() {
     role: 'Driver',
     licensePlate: '',
   });
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({
     phone: '',
@@ -42,9 +44,18 @@ export function SignupForm() {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
-        console.log('signup successful!');
+        console.log('Login successful!');
+        if (formData.role === 'ParkingLotManager') {
+          navigate('/manager');
+        } else if (formData.role === 'Admin') {
+          navigate('/admin');
+        } else if (formData.role === 'Driver') {
+          navigate('/driver');
+        }
+       
       } else {
-        console.error('signup failed');
+ 
+        console.error('Login failed');
       }
     } catch (error) {
       console.error('Error:', error);

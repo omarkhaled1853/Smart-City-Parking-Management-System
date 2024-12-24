@@ -29,7 +29,7 @@ public class UserController {
     
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-        if (loginDTO == null || loginDTO.getEmail() == null || loginDTO.getPassword() == null) {
+        if (loginDTO == null || loginDTO.getEmail() == null || loginDTO.getPassword() == null||loginDTO.getRole() == null) {
         return ResponseEntity.badRequest().body("Request body or required fields are missing.");
     }
         boolean isAuthenticated = userService.loginUser(loginDTO);

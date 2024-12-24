@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-
 export function LoginForm() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', password: '', role: '' });
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, role: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await fetch('http://localhost:8080/api/users/login', {
@@ -17,10 +20,14 @@ export function LoginForm() {
       });
       if (response.ok) {
         console.log('Login successful!');
-        navigate('/manager'); // Navigate to manager page on successful login
-
-
-
+        // Navigate based on role
+        if (formData.role === 'ParkingLotManager') {
+          navigate('/manager');
+        } else if (formData.role === 'Admin') {
+          navigate('/admin');
+        } else if (formData.role === 'Driver') {
+          navigate('/driver');
+        }
       } else {
         console.error('Login failed');
       }
@@ -28,7 +35,7 @@ export function LoginForm() {
       console.error('Error:', error);
     }
   };
-  
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
@@ -56,6 +63,43 @@ export function LoginForm() {
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           required
         />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Select Role
+        </label>
+        <div className="flex gap-4 mt-2">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="role"
+              value="Driver"
+              onChange={handleRoleChange}
+              required
+            />
+            Driver
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="role"
+              value="ParkingLotManager"
+              onChange={handleRoleChange}
+              required
+            />
+            ParkingLotManager
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="role"
+              value="Admin"
+              onChange={handleRoleChange}
+              required
+            />
+            Admin
+          </label>
+        </div>
       </div>
       <button
         type="submit"
