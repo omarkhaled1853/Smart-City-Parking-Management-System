@@ -51,6 +51,7 @@ public class ParkingLotController {
     public String deleteParkingLot(@PathVariable int id) {
         try {
             parkingLotRepository.deleteParkingLot(id);
+            System.out.println("Parking lot deleted successfully.");
             return "Parking lot deleted successfully.";
         } catch (Exception e) {
             return "Error: " + e.getMessage();
