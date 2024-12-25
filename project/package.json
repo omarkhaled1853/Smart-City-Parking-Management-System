@@ -14,6 +14,7 @@
     "@libsql/client": "^0.5.6",
     "@prisma/adapter-libsql": "^5.10.2",
     "@prisma/client": "^5.10.2",
+    "@stomp/stompjs": "^7.0.0",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.9",
     "axios-mock-adapter": "^2.1.0",
@@ -27,6 +28,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.0",
     "smart-parking-system": "file:",
+    "sockjs-client": "^1.6.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -38,6 +40,7 @@
     "@types/node": "^20.11.24",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
+    "@types/sockjs-client": "^1.5.4",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.18",
     "eslint": "^9.9.1",

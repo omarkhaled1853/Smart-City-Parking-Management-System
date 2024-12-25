@@ -12,11 +12,8 @@ export function SignupForm() {
     role: 'Driver',
     licensePlate: '',
   });
+  const [errors, setErrors] = useState({ phone: '', api: '' });
   const navigate = useNavigate();
-
-  const [errors, setErrors] = useState({
-    phone: '',
-  });
 
   const validatePhone = (phone: string) => {
     const phoneRegex = /^01\d{9}$/; // Regex to check for 12 digits starting with "01"
@@ -26,7 +23,7 @@ export function SignupForm() {
     return '';
   };
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate phone number
@@ -36,15 +33,16 @@ export function SignupForm() {
       return;
     }
 
-    setErrors({ phone: '' }); // Clear any previous errors
+    setErrors({ phone: '', api: '' }); // Clear any previous errors
     try {
       const response = await fetch('http://localhost:8080/api/users/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
+
       if (response.ok) {
-        console.log('Login successful!');
+        console.log('Signup successful!');
         if (formData.role === 'ParkingLotManager') {
           navigate('/manager');
         } else if (formData.role === 'Admin') {
@@ -52,18 +50,23 @@ export function SignupForm() {
         } else if (formData.role === 'Driver') {
           navigate('/driver');
         }
-       
       } else {
- 
-        console.error('Login failed');
+        const errorData = await response.json(); // Parse JSON error response
+        setErrors((prev) => ({
+          ...prev,
+          api: errorData.message || 'Signup failed. Please try again.', // Display backend message if available
+        }));
       }
     } catch (error) {
       console.error('Error:', error);
+      setErrors((prev) => ({
+        ...prev,
+        api: 'An unexpected error occurred. Please try again later.', // Handle network or other unexpected errors
+      }));
     }
-    // TODO: Implement actual signup logic
+  
     console.log('Signup:', formData);
   };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
@@ -129,9 +132,9 @@ export function SignupForm() {
           value={formData.role}
           onChange={(e) => setFormData({ ...formData, role: e.target.value as 'Driver' | 'ParkingLotManager' | 'Admin' })}
         >
-          <option value="driver">Driver</option>
-          <option value="parking_manager">Parking Lot Manager</option>
-          <option value="admin">Admin</option>
+          <option value="Driver">Driver</option>
+          <option value="ParkingLotManager">Parking Lot Manager</option>
+          <option value="Admin">Admin</option>
         </select>
       </div>
       {formData.role === 'Driver' && (
@@ -148,6 +151,7 @@ export function SignupForm() {
           />
         </div>
       )}
+      {errors.api && <p className="text-sm text-red-500">{errors.api}</p>}
       <button
         type="submit"
         className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"

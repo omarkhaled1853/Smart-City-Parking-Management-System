@@ -33,6 +33,7 @@ UserService {
             if (userRepository.roleExists(userID, roleId)) {
                 return "User with this role already exists.";
             }
+            System.out.println(roleId);
 
             // Insert new UserRole if role is missing
             String insertUserRoleSql = "INSERT INTO UserRoles (UserID, RoleID) VALUES (?, ?)";
@@ -61,7 +62,7 @@ UserService {
                 String insertUserRoleSql = "INSERT INTO UserRoles (UserID, RoleID) VALUES (?, ?)";
                 jdbcTemplate.update(insertUserRoleSql, userId, roleId);
 
-                return "User registered successfully with role: " + roleName;
+                return "User registered successfully with role:";
             } else {
                 return "Failed to register user.";
             }
@@ -69,7 +70,7 @@ UserService {
     }
 
 
-    public boolean loginUser(LoginDTO loginDTO) {
+    public String loginUser(LoginDTO loginDTO) {
         // Authenticate user
         if(userRepository.authenticateUser(loginDTO.getEmail(), loginDTO.getPassword())){
             int userID = userRepository.getUserIdByEmail(loginDTO.getEmail());
@@ -77,12 +78,12 @@ UserService {
             Integer roleId = userRepository.getRoleIdByRoleName(roleName); // Get RoleID for the role
             // Check if the user already has the role
             if (userRepository.roleExists(userID, roleId)) {
-                return true;
+                return "Login successful";
             }
-            return false;
+            return "Role is wrong";
         }
         else{
-            return false;
+            return "Password or email is incorrect.";
         }
     }
 }

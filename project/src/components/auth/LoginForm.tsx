@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export function LoginForm() {
   const [formData, setFormData] = useState({ email: '', password: '', role: '' });
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({ api: '' });
 
   const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, role: e.target.value });
@@ -29,10 +30,18 @@ export function LoginForm() {
           navigate('/driver');
         }
       } else {
-        console.error('Login failed');
+        const errorData = await response.json(); // Parse JSON error response
+        setErrors((prev) => ({
+          ...prev,
+          api: errorData.message || 'Login failed. Please try again.', // Display backend message if available
+        }));
       }
     } catch (error) {
       console.error('Error:', error);
+      setErrors((prev) => ({
+        ...prev,
+        api: 'An unexpected error occurred. Please try again later.', // Handle network or other unexpected errors
+      }));
     }
   };
 
@@ -101,6 +110,7 @@ export function LoginForm() {
           </label>
         </div>
       </div>
+      {errors.api && <p className="text-sm text-red-500">{errors.api}</p>}
       <button
         type="submit"
         className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"

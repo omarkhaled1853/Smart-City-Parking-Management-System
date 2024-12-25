@@ -26,7 +26,7 @@ def update_spot_status():
             # Randomly update status for a spot
             for spot in spots:
                 spot_id = spot[0]
-                new_status = random.choice(['Available', 'Occupied', 'Reserved'])
+                new_status = random.choice(['Available', 'Occupied'])
                 cursor.execute(
                     "UPDATE parkingspot SET Status = %s WHERE SpotID = %s",
                     (new_status, spot_id)

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+
 export function ManagerPage() {
   const [parkingLots, setParkingLots] = useState<{
     parkingLotID: number;
@@ -16,7 +17,6 @@ export function ManagerPage() {
       duration?: string;
     }[]; 
   }[]>([]);
-
   const [reports, setReports] = useState("");
   const [editModal, setEditModal] = useState<{
     show: boolean;
@@ -50,10 +50,19 @@ export function ManagerPage() {
   const [showAddLotForm, setShowAddLotForm] = useState(false);
   const [showAddSpotForm, setShowAddSpotForm] = useState(false);
 
+
+
   // Fetch Parking Lots and their spots
   useEffect(() => {
     fetchParkingLots();
+    // const interval = setInterval(() => {
+    //   fetchParkingLots();
+    // }, 10000);
+
+    // return () => clearInterval(interval);
   }, []);
+
+  
 
   const fetchParkingLots = async () => {
     try {
@@ -65,6 +74,7 @@ export function ManagerPage() {
       lots.forEach(async (lot: { parkingLotID: number }) => {
         await fetchParkingSpots(lot.parkingLotID);
       });
+      console.log(" fetched parking lots:");
 
     } catch (error) {
       console.error("Error fetching parking lots:", (error as Error).message);
@@ -99,6 +109,7 @@ export function ManagerPage() {
     } catch (error) {
       console.error("Error updating spot status:", (error as Error).message);
     }
+    fetchParkingLots();
   };
 
   const handleEditPricing = async () => {
@@ -307,7 +318,7 @@ export function ManagerPage() {
               )}
               {editModal.editType === "pricing" && (
                 <div className="mb-4">
-                  <label className="block font-medium mb-1">Price Per Hour</label>
+                  <label className="block font-medium mb-1">Demand Factor</label>
                   <input
                     type="number"
                     value={editModal.spot.pricePerHour}
