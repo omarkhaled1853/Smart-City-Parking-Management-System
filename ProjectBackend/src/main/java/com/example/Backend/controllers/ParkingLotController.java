@@ -31,8 +31,6 @@ public class ParkingLotController {
     @PostMapping("/parkinglots")
     public String addParkingLot(@RequestBody ParkingLotDTO parkingLot) {
         try {
-            System.out.println(parkingLot.getUserID());
-
             parkingLotRepository.addParkingLot(parkingLot);
             return "Parking lot added successfully.";
         } catch (Exception e) {

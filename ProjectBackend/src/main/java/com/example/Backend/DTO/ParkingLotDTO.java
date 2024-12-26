@@ -1,5 +1,7 @@
 package com.example.Backend.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ParkingLotDTO {
     private int parkingLotID;
     private int UserID;
@@ -17,9 +19,12 @@ public class ParkingLotDTO {
         return parkingLotID;
     }
 
+    @JsonProperty("UserID")
     public void setUserID(int UserID) {
         this.UserID = UserID;
     }
+    
+    @JsonProperty("UserID")
     public int getUserID() {
         return UserID;
     }
