@@ -33,7 +33,7 @@ UserService {
             if (userRepository.roleExists(userID, roleId)) {
                 return "User with this role already exists.";
             }
-            System.out.println(roleId);
+            System.out.println(roleId +"ggggggggggggggg");
 
             // Insert new UserRole if role is missing
             String insertUserRoleSql = "INSERT INTO UserRoles (UserID, RoleID) VALUES (?, ?)";

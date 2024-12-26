@@ -2,6 +2,7 @@ package com.example.Backend.DTO;
 
 public class ParkingLotDTO {
     private int parkingLotID;
+    private int UserID;
     private String name;
     private String location;
     private int capacity;
@@ -14,6 +15,13 @@ public class ParkingLotDTO {
     // Getters and Setters
     public int getParkingLotID() {
         return parkingLotID;
+    }
+
+    public void setUserID(int UserID) {
+        this.UserID = UserID;
+    }
+    public int getUserID() {
+        return UserID;
     }
 
     public void setParkingLotID(int parkingLotID) {

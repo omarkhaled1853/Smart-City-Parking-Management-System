@@ -46,6 +46,14 @@ public class ParkingLotController {
             throw new RuntimeException("Error fetching parking lots: " + e.getMessage());
         }
     }
+    @GetMapping("/parkinglots/{id}")
+    public List<ParkingLotDTO> getSpesficParkingLots(@PathVariable int id) {
+        try {
+            return parkingLotRepository.getSpesficParkingLots(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching parking lots: " + e.getMessage());
+        }
+    }
 
     @DeleteMapping("/parkinglots/{id}")
     public String deleteParkingLot(@PathVariable int id) {

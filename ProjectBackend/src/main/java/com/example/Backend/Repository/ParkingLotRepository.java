@@ -17,14 +17,15 @@ public class ParkingLotRepository {
     private DataSource dataSource;
 
     public void addParkingLot(ParkingLotDTO parkingLot) throws SQLException {
-        String query = "INSERT INTO parkinglot (Name, Location, Capacity, PricingModel) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO parkinglot (Name, UserID, Location, Capacity, PricingModel) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, parkingLot.getName());
-            preparedStatement.setString(2, parkingLot.getLocation());
-            preparedStatement.setInt(3, parkingLot.getCapacity());
-            preparedStatement.setString(4, parkingLot.getPricingModel().name());
+            preparedStatement.setInt(2, parkingLot.getUserID());
+            preparedStatement.setString(3, parkingLot.getLocation());
+            preparedStatement.setInt(4, parkingLot.getCapacity());
+            preparedStatement.setString(5, parkingLot.getPricingModel().name());
 
             preparedStatement.executeUpdate();
         }
@@ -47,6 +48,32 @@ public class ParkingLotRepository {
                 parkingLot.setPricingModel(ParkingLotDTO.PricingModel.valueOf(resultSet.getString("PricingModel")));
 
                 parkingLots.add(parkingLot);
+            }
+        }
+
+        return parkingLots;
+    }
+
+    public List<ParkingLotDTO> getSpesficParkingLots(int userID) throws SQLException {
+        String query = "SELECT * FROM ParkingLot WHERE UserID = ?";
+        List<ParkingLotDTO> parkingLots = new ArrayList<>();
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, userID);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    ParkingLotDTO parkingLot = new ParkingLotDTO();
+                    parkingLot.setUserID(resultSet.getInt("UserID"));
+                    parkingLot.setParkingLotID(resultSet.getInt("ParkingLotID"));
+                    parkingLot.setName(resultSet.getString("Name"));
+                    parkingLot.setLocation(resultSet.getString("Location"));
+                    parkingLot.setCapacity(resultSet.getInt("Capacity"));
+                    parkingLot.setPricingModel(ParkingLotDTO.PricingModel.valueOf(resultSet.getString("PricingModel")));
+
+                    parkingLots.add(parkingLot);
+                }
             }
         }
 
