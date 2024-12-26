@@ -90,6 +90,16 @@ public class ParkingSpotRepository {
             preparedStatement.executeUpdate();
         }
     }
+    public void updateSpotPricing(int spotID, double price) throws SQLException {
+        String query = "UPDATE parkingspot SET PricePerHour = ? WHERE SpotID = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setDouble(1, price);
+            preparedStatement.setInt(2, spotID);
+            preparedStatement.executeUpdate();
+        }
+    }
 
     public void deleteParkingSpot(int spotID) throws SQLException {
         String query = "DELETE FROM parkingspot WHERE SpotID = ?";

@@ -109,7 +109,8 @@ public class ParkingLotController {
     public String updateSpotPricing(@PathVariable int spotID, @RequestParam double demandFactor) {
         try {
             // Call the service method to update pricing
-            return parkingLotService.updateSpotPricing(spotID, demandFactor);
+            parkingSpotRepository.updateSpotPricing(spotID, demandFactor);
+            return "Parking spot pricing updated successfully.";
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }

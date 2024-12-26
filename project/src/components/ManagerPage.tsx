@@ -318,7 +318,7 @@ export function ManagerPage() {
               )}
               {editModal.editType === "pricing" && (
                 <div className="mb-4">
-                  <label className="block font-medium mb-1">Demand Factor</label>
+                  <label className="block font-medium mb-1">Price</label>
                   <input
                     type="number"
                     value={editModal.spot.pricePerHour}

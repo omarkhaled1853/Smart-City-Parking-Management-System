@@ -1,8 +1,13 @@
 package com.example.Backend.services;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import com.example.Backend.DTO.ParkingSpotDTO;
 
 @Service
 public class ParkingLotService {
@@ -24,4 +29,6 @@ public class ParkingLotService {
             return "Error: " + e.getMessage();
         }
     }
+
+
 }
