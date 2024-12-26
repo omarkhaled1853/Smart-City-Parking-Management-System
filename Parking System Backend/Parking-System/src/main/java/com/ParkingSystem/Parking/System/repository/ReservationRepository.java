@@ -47,4 +47,32 @@ public class ReservationRepository {
 
         return reservationDTOList;
     }
+
+    public List<ReservationDTO> getAllReservationsByLocation(int userId, String location) {
+        Connection connection = null;
+        CallableStatement callableStatement = null;
+        ResultSet resultSet = null;
+        List<ReservationDTO> reservationDTOList = new ArrayList<>();
+
+        try {
+            connection = getConnection(dataSource);
+            String sql = "{CALL GetAllReservationsByLocation(?, ?)}";
+            callableStatement = connection.prepareCall(sql);
+            callableStatement.setInt("user_id", userId);
+            callableStatement.setString("location", location);
+            resultSet = callableStatement.executeQuery();
+            reservationDTOList = new ArrayList<>();
+            while (resultSet.next()) {
+                reservationDTOList.add(toReservationDto(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        } finally {
+            closeResultSet(resultSet);
+            closeCallableStatement(callableStatement);
+            closeConnection(connection);
+        }
+
+        return reservationDTOList;
+    }
 }

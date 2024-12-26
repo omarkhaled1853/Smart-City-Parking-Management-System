@@ -1,5 +1,6 @@
 package com.ParkingSystem.Parking.System.controller;
 
+import com.ParkingSystem.Parking.System.dto.PayLoadDTO;
 import com.ParkingSystem.Parking.System.dto.ReservationDTO;
 import com.ParkingSystem.Parking.System.service.DriverProfileService;
 import com.ParkingSystem.Parking.System.service.impl.DriverProfileServiceImpl;
@@ -24,6 +25,21 @@ public class DriverProfileController {
     @GetMapping("/reservations/{userId}")
     public ResponseEntity<?> getAllReservations(@PathVariable int userId) {
         List<ReservationDTO> reservationDTOList = driverProfileService.getAllReservation(userId);
+        if (reservationDTOList != null) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(reservationDTOList);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+    }
+
+    @GetMapping("/reservations/search")
+    public ResponseEntity<?> getAllReservations(@RequestBody PayLoadDTO payLoadDTO) {
+        List<ReservationDTO> reservationDTOList =
+                driverProfileService.getAllReservationsByLocation(
+                        payLoadDTO.getUserId(),
+                        payLoadDTO.getLocation()
+                );
         if (reservationDTOList != null) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(reservationDTOList);

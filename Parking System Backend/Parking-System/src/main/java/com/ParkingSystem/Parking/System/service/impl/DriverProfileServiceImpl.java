@@ -23,4 +23,9 @@ public class DriverProfileServiceImpl implements DriverProfileService {
     public List<ReservationDTO> getAllReservation(int userID)  {
         return reservationRepository.getAllReservations(userID);
     }
+
+    @Override
+    public List<ReservationDTO> getAllReservationsByLocation(int userId, String location) {
+        return reservationRepository.getAllReservationsByLocation(userId, location);
+    }
 }
