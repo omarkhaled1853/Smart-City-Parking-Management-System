@@ -3,6 +3,7 @@ import axios from "axios";
 
 
 export function ManagerPage() {
+  const [priceAdjusted, setPriceAdjusted] = useState<Record<number, boolean>>({});
   const [parkingLots, setParkingLots] = useState<{
     parkingLotID: number;
     name: string;
@@ -80,20 +81,54 @@ export function ManagerPage() {
       console.error("Error fetching parking lots:", (error as Error).message);
     }
   };
-
+  const adjustPriceIfNeeded = (lotId: number, spots: any[]) => {
+    const totalSpots = spots.length;
+    const reservedOrOccupied = spots.filter(
+      (spot) => spot.status === "Reserved" || spot.status === "Occupied"
+    ).length;
+  
+    const percentageOccupied = (reservedOrOccupied / totalSpots) * 100;
+  
+    if (percentageOccupied > 50 && !priceAdjusted[lotId]) {
+      // Increase price by 10% once
+      spots.forEach((spot) => {
+        if (spot.status === "Available" || spot.status === "Reserved") {
+          spot.pricePerHour = spot.pricePerHour * 1.1;
+        }
+      });
+      setPriceAdjusted((prev) => ({ ...prev, [lotId]: true }));
+    } else if (percentageOccupied < 50 && priceAdjusted[lotId]) {
+      // Decrease price by 10% once
+      spots.forEach((spot) => {
+        if (spot.status === "Available" || spot.status === "Reserved") {
+          spot.pricePerHour = spot.pricePerHour * 0.9;
+        }
+      });
+      setPriceAdjusted((prev) => ({ ...prev, [lotId]: false }));
+    }
+  };
   const fetchParkingSpots = async (lotId: number) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/manager/parkingspots?lotId=${lotId}`);
+      const response = await axios.get(
+        `http://localhost:8080/api/manager/parkingspots?lotId=${lotId}`
+      );
+      const spots = response.data;
+  
+      // Adjust price based on occupancy percentage
+      adjustPriceIfNeeded(lotId, spots);
+  
+      // Update parking lots state
       setParkingLots((prevLots) =>
         prevLots.map((lot) =>
-          lot.parkingLotID === lotId ? { ...lot, spots: response.data } : lot
+          lot.parkingLotID === lotId ? { ...lot, spots } : lot
         )
       );
     } catch (error) {
-      console.error(`Error fetching parking spots for lot ${lotId}:`, (error as Error).message);
+      console.error(`Error fetching parking spots for lot ${lotId}:`, error);
     }
   };
-
+    
+ 
   const handleEditStatus = async () => {
     if (!editModal.spot || !editModal.lotId) return;
 
