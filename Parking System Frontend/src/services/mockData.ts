@@ -8,13 +8,13 @@ export const mockReservations: ReservationDTO[] = [
     reservationStatus: ReservationStatus.ACTIVE,
     parkingSpot: {
       spotId: 101,
-      spotType: ParkingSpotType.STANDARD,
+      spotType: ParkingSpotType.DISABLED,
       status: ParkingSpotStatus.OCCUPIED
     },
     parkingLot: {
       name: "Downtown Parking Complex",
       location: "123 Main Street",
-      pricingModel: ParkingLotPricingModel.HOURLY
+      pricingModel: ParkingLotPricingModel.DYNAMIC
     }
   },
   {
@@ -24,13 +24,13 @@ export const mockReservations: ReservationDTO[] = [
     reservationStatus: ReservationStatus.COMPLETED,
     parkingSpot: {
       spotId: 102,
-      spotType: ParkingSpotType.ELECTRIC,
+      spotType: ParkingSpotType.EVCHARGING,
       status: ParkingSpotStatus.AVAILABLE
     },
     parkingLot: {
       name: "City Center Garage",
       location: "456 Park Avenue",
-      pricingModel: ParkingLotPricingModel.DAILY
+      pricingModel: ParkingLotPricingModel.STATIC
     }
   }
 ];
