@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -14,8 +14,8 @@ import java.sql.Date;
 @NoArgsConstructor
 public class ReservationDTO {
     private int reservationId;
-    private Date startTime;
-    private Date endTime;
+    private Timestamp startTime;
+    private Timestamp endTime;
     private ReservationStatus reservationStatus;
     private ParkingSpotDTO parkingSpot;
     private ParkingLotDTO parkingLot;

@@ -11,13 +11,14 @@ import com.ParkingSystem.Parking.System.enums.ReservationStatus;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class mapper {
     public static ReservationDTO toReservationDto (ResultSet resultSet) {
         try {
             int reservationId = resultSet.getInt(1);
-            Date startTime = resultSet.getDate(2);
-            Date endTime = resultSet.getDate(3);
+            Timestamp startTime = resultSet.getTimestamp(2);
+            Timestamp endTime = resultSet.getTimestamp(3);
             ReservationStatus reservationStatus = ReservationStatus.valueOf(resultSet.getString(4));
             int spotId = resultSet.getInt(5);
             ParkingSpotType spotType = ParkingSpotType.valueOf(resultSet.getString(6));
