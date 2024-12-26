@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ParkingSystem</groupId>
-	<artifactId>Parking-System</artifactId>
+	<artifactId>Parking-System-Backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Parking-System</name>
 	<description>Smart City Parking Management System project for Spring Boot</description>
