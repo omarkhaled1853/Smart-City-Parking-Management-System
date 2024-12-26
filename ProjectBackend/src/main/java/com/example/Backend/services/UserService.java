@@ -1,5 +1,8 @@
 package com.example.Backend.services;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -70,20 +73,27 @@ UserService {
     }
 
 
-    public String loginUser(LoginDTO loginDTO) {
-        // Authenticate user
-        if(userRepository.authenticateUser(loginDTO.getEmail(), loginDTO.getPassword())){
-            int userID = userRepository.getUserIdByEmail(loginDTO.getEmail());
-            String roleName = loginDTO.getRole(); // The role passed from the frontend
-            Integer roleId = userRepository.getRoleIdByRoleName(roleName); // Get RoleID for the role
-            // Check if the user already has the role
-            if (userRepository.roleExists(userID, roleId)) {
-                return "Login successful";
-            }
-            return "Role is wrong";
+    public Map<String, Object> loginUser(LoginDTO loginDTO) {
+    Map<String, Object> result = new HashMap<>();
+    if (userRepository.authenticateUser(loginDTO.getEmail(), loginDTO.getPassword())) {
+        int userId = userRepository.getUserIdByEmail(loginDTO.getEmail());
+        String roleName = loginDTO.getRole(); // The role passed from the frontend
+        Integer roleId = userRepository.getRoleIdByRoleName(roleName); // Get RoleID for the role
+
+        // Check if the user already has the role
+        if (userRepository.roleExists(userId, roleId)) {
+            result.put("status", "success");
+            result.put("message", "Login successful");
+            result.put("userId", userId); // Include UserID in the result
+        } else {
+            result.put("status", "error");
+            result.put("message", "Role is wrong");
         }
-        else{
-            return "Password or email is incorrect.";
-        }
+    } else {
+        result.put("status", "error");
+        result.put("message", "Password or email is incorrect.");
     }
+    return result;
+}
+
 }

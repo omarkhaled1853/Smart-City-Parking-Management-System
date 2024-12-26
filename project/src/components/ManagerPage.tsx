@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
+
 
 
 export function ManagerPage() {
+
+  const [searchParams] = useSearchParams();
+  const userId = searchParams.get("userId");
   const [priceAdjusted, setPriceAdjusted] = useState<Record<number, boolean>>({});
   const [parkingLots, setParkingLots] = useState<{
     parkingLotID: number;
+    UserID : number;
     name: string;
     location: string;
     capacity: number;
@@ -34,6 +40,7 @@ export function ManagerPage() {
 
   const [newLot, setNewLot] = useState({
     name: "",
+    UserID : userId,
     location: "",
     capacity: 0,
     pricingModel: "",
@@ -51,23 +58,23 @@ export function ManagerPage() {
   const [showAddLotForm, setShowAddLotForm] = useState(false);
   const [showAddSpotForm, setShowAddSpotForm] = useState(false);
 
+ ;
 
 
   // Fetch Parking Lots and their spots
   useEffect(() => {
-    fetchParkingLots();
-    // const interval = setInterval(() => {
-    //   fetchParkingLots();
-    // }, 10000);
-
-    // return () => clearInterval(interval);
-  }, []);
+    if (userId) {
+      // Use the userId, e.g., fetch data
+      fetchParkingLots(parseInt(userId));
+    }
+  }, [userId]);
 
   
 
-  const fetchParkingLots = async () => {
+  const fetchParkingLots = async (userId :number) => {
     try {
-      const response = await axios.get("http://localhost:8080/api/manager/parkinglots");
+      console.log(userId);
+      const response = await axios.get(`http://localhost:8080/api/manager/parkinglots/${userId}`);
       const lots = response.data;
       setParkingLots(lots);
 
@@ -140,12 +147,18 @@ export function ManagerPage() {
 
       alert(`Spot #${spotID} status updated successfully!`);
       setEditModal({ show: false, lotId: null, spot: null, editType: null });
-      fetchParkingLots(); // Refresh parking lots and spots
-    } catch (error) {
+      if (userId) {
+        // Use the userId, e.g., fetch data
+        console.log(`User ID: ${userId}`);
+        fetchParkingLots(parseInt(userId));
+      }    } catch (error) {
       console.error("Error updating spot status:", (error as Error).message);
     }
-    fetchParkingLots();
-  };
+    if (userId) {
+      // Use the userId, e.g., fetch data
+      console.log(`User ID: ${userId}`);
+      fetchParkingLots(parseInt(userId));
+    }  };
 
   const handleEditPricing = async () => {
     if (!editModal.spot || !editModal.lotId) return;
@@ -158,8 +171,11 @@ export function ManagerPage() {
 
       alert(`Spot #${spotID} pricing updated successfully!`);
       setEditModal({ show: false, lotId: null, spot: null, editType: null });
-      fetchParkingLots(); // Refresh parking lots and spots
-    } catch (error) {
+      if (userId) {
+        // Use the userId, e.g., fetch data
+        console.log(`User ID: ${userId}`);
+        fetchParkingLots(parseInt(userId));
+      }    } catch (error) {
       console.error("Error updating spot pricing:", (error as Error).message);
     }
   };
@@ -179,8 +195,11 @@ export function ManagerPage() {
       await axios.delete(`http://localhost:8080/api/manager/parkinglots/${lotId}`);
       alert(`Parking Lot #${lotId} deleted successfully!`);
       console.log("Parking lot deleted successfully!");
-      fetchParkingLots(); // Refresh the parking lots after deletion
-    } catch (error) {
+      if (userId) {
+        // Use the userId, e.g., fetch data
+        console.log(`User ID: ${userId}`);
+        fetchParkingLots(parseInt(userId));
+      }    } catch (error) {
       console.error("Error deleting parking lot:", (error as Error).message);
     }
   };
@@ -189,8 +208,11 @@ export function ManagerPage() {
     try {
       await axios.delete(`http://localhost:8080/api/manager/parkingspots/${spotId}`);
       alert(`Parking Spot #${spotId} deleted successfully!`);
-      fetchParkingLots(); // Refresh the parking spots after deletion
-    } catch (error) {
+      if (userId) {
+        // Use the userId, e.g., fetch data
+        console.log(`User ID: ${userId}`);
+        fetchParkingLots(parseInt(userId));
+      }    } catch (error) {
       console.error("Error deleting parking spot:", (error as Error).message);
     }
   };
@@ -199,10 +221,13 @@ export function ManagerPage() {
     try {
       await axios.post("http://localhost:8080/api/manager/parkinglots", newLot);
       alert("Parking Lot added successfully!");
-      setNewLot({ name: "", location: "", capacity: 0, pricingModel: "" }); // Reset form
+      setNewLot({ name: "",UserID: userId, location: "", capacity: 0, pricingModel: "" }); // Reset form
+      console.log(newLot);
       setShowAddLotForm(false); // Close the form
-      fetchParkingLots(); // Refresh the parking lots
-    } catch (error) {
+      if (userId) {
+        // Use the userId, e.g., fetch data
+        fetchParkingLots(parseInt(userId)); 
+      }    } catch (error) {
       console.error("Error adding parking lot:", (error as Error).message);
     }
   };
@@ -214,8 +239,11 @@ export function ManagerPage() {
       alert("Parking Spot added successfully!");
       setNewSpot({ parkingLotID: 0, spotType: "", status: "Available", pricePerHour: 0}); // Reset form
       setShowAddSpotForm(false); // Close the form
-      fetchParkingLots(); // Refresh the parking spots
-    } catch (error) {
+      if (userId) {
+        // Use the userId, e.g., fetch data
+        console.log(`User ID: ${userId}`);
+        fetchParkingLots(parseInt(userId));
+      }    } catch (error) {
       console.error("Error adding parking spot:", (error as Error).message);
     }
   };

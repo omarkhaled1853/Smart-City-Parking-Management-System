@@ -10,7 +10,7 @@ logging.basicConfig(filename="sensor_updates.log", level=logging.INFO, format="%
 db = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="hossam86543",
+    password="09517536248",
     database="smartcityparking"
 )
 cursor = db.cursor()

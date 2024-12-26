@@ -20,14 +20,17 @@ export function LoginForm() {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
+        const data = await response.json(); // Assuming response includes the UserID in the JSON payload
+        document.cookie = `UserID=${data.userId}; path=/; Secure; SameSite=Strict`;
         console.log('Login successful!');
         // Navigate based on role
+        const userId = data.userId;
         if (formData.role === 'ParkingLotManager') {
-          navigate('/manager');
+          navigate(`/manager?userId=${userId}`);
         } else if (formData.role === 'Admin') {
-          navigate('/admin');
+          navigate(`/admin?userId=${userId}`);
         } else if (formData.role === 'Driver') {
-          navigate('/driver');
+          navigate(`/driver?userId=${userId}`);
         }
       } else {
         const errorData = await response.json(); // Parse JSON error response

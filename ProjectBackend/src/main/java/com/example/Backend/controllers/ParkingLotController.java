@@ -31,6 +31,8 @@ public class ParkingLotController {
     @PostMapping("/parkinglots")
     public String addParkingLot(@RequestBody ParkingLotDTO parkingLot) {
         try {
+            System.out.println(parkingLot.getUserID());
+
             parkingLotRepository.addParkingLot(parkingLot);
             return "Parking lot added successfully.";
         } catch (Exception e) {
@@ -38,14 +40,14 @@ public class ParkingLotController {
         }
     }
 
-    @GetMapping("/parkinglots")
-    public List<ParkingLotDTO> getAllParkingLots() {
-        try {
-            return parkingLotRepository.getAllParkingLots();
-        } catch (Exception e) {
-            throw new RuntimeException("Error fetching parking lots: " + e.getMessage());
-        }
-    }
+    // @GetMapping("/parkinglots")
+    // public List<ParkingLotDTO> getAllParkingLots() {
+    //     try {
+    //         return parkingLotRepository.getAllParkingLots();
+    //     } catch (Exception e) {
+    //         throw new RuntimeException("Error fetching parking lots: " + e.getMessage());
+    //     }
+    // }
     @GetMapping("/parkinglots/{id}")
     public List<ParkingLotDTO> getSpesficParkingLots(@PathVariable int id) {
         try {

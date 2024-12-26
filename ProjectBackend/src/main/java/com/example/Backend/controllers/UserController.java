@@ -52,30 +52,27 @@ public class UserController {
     }
 }
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody LoginDTO loginDTO) {
-        Map<String, String> response = new HashMap<>();
-        if (loginDTO == null || loginDTO.getEmail() == null || loginDTO.getPassword() == null||loginDTO.getRole() == null) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDTO loginDTO) {
+        Map<String, Object> response = new HashMap<>();
+        if (loginDTO == null || loginDTO.getEmail() == null || loginDTO.getPassword() == null || loginDTO.getRole() == null) {
             response.put("status", "error");
             response.put("message", "Request body or required fields are missing.");
-        return ResponseEntity.badRequest().body(response);
-    }
-    String isAuthenticated = userService.loginUser(loginDTO);
-        switch (isAuthenticated) {
-            case "Login successful":
-                response.put("status", "success");
-                response.put("message", isAuthenticated);
-                return ResponseEntity.ok(response);
+            return ResponseEntity.badRequest().body(response);
+        }
     
-            case "Role is wrong":
-            case "Password or email is incorrect.":
-                response.put("status", "error");
-                response.put("message", isAuthenticated);
-                return ResponseEntity.badRequest().body(response);
+        Map<String, Object> loginResult = userService.loginUser(loginDTO);
+        String status = (String) loginResult.get("status");
+        String message = (String) loginResult.get("message");
     
-            default:
-                response.put("status", "error");
-                response.put("message", "Unknown error occurred.");
-                return ResponseEntity.badRequest().body(response);
+        response.put("status", status);
+        response.put("message", message);
+    
+        if ("success".equals(status)) {
+            response.put("userId", loginResult.get("userId")); // Include UserID in the response
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.badRequest().body(response);
         }
     }
+    
 }
