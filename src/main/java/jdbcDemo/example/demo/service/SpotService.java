@@ -1,7 +1,7 @@
 package jdbcDemo.example.demo.service;
 
 import jdbcDemo.example.demo.dao.SpotDao;
-import jdbcDemo.example.demo.entity.Spot;
+import jdbcDemo.example.demo.entity.ParkingSpot;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class SpotService {
     public SpotService(SpotDao spotDao){
         this.spotDao = spotDao;
     }
-    public List<Spot> getAllSpotsByLotId(int lotId){
+    public List<ParkingSpot> getAllSpotsByLotId(int lotId){
         return spotDao.getAllSpotsByLotId(lotId);
     }
 

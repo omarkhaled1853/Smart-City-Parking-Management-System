@@ -1,6 +1,6 @@
 package jdbcDemo.example.demo.dao;
 
-import jdbcDemo.example.demo.entity.Lot;
+import jdbcDemo.example.demo.entity.ParkingLot;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,34 +15,34 @@ public class LotDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Lot> getAllLots(){
+    public List<ParkingLot> getAllLots(){
         String query = "SELECT * FROM ParkingLot";
 
         return jdbcTemplate.query(query,  (rs, rowNum) ->{
-            Lot lot = Lot.builder()
-                    .id(rs.getInt("ParkingLotID"))
-                    .name(rs.getString("Name"))
-                    .location(rs.getString("Location"))
-                    .capacity(rs.getInt("Capacity"))
+            ParkingLot parkingLot = ParkingLot.builder()
+                    .ParkingLotID(rs.getInt("ParkingLotID"))
+                    .Name(rs.getString("Name"))
+                    .Location(rs.getString("Location"))
+                    .Capacity(rs.getInt("Capacity"))
                     .build();
 
-            return lot;
+            return parkingLot;
 
         } );
     }
 
-    public Lot getLotById(int id){
+    public ParkingLot getLotById(int id){
         String query = "SELECT * FROM ParkingLot WHERE ParkingLotID = ?";
         try {
             return jdbcTemplate.queryForObject(query, (rs, rowNum) ->{
-                Lot lot = Lot.builder()
-                        .id(rs.getInt("ParkingLotID"))
-                        .name(rs.getString("Name"))
-                        .location(rs.getString("Location"))
-                        .capacity(rs.getInt("Capacity"))
+                ParkingLot parkingLot = ParkingLot.builder()
+                        .ParkingLotID(rs.getInt("ParkingLotID"))
+                        .Name(rs.getString("Name"))
+                        .Location(rs.getString("Location"))
+                        .Capacity(rs.getInt("Capacity"))
                         .build();
 
-                return lot;
+                return parkingLot;
             }, id);
 
         }catch (DataAccessException e){

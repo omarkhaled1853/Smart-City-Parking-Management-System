@@ -1,6 +1,6 @@
 package jdbcDemo.example.demo.controller;
 
-import jdbcDemo.example.demo.entity.Spot;
+import jdbcDemo.example.demo.entity.ParkingSpot;
 import jdbcDemo.example.demo.service.NotificationService;
 import jdbcDemo.example.demo.service.PaymentService;
 import jdbcDemo.example.demo.service.ReservationService;
@@ -30,7 +30,7 @@ public class SpotController {
     }
 
     @GetMapping("/{lotId}")
-    public List<Spot> getAllSpotsByLotId(@PathVariable int lotId){
+    public List<ParkingSpot> getAllSpotsByLotId(@PathVariable int lotId){
 
         return spotService.getAllSpotsByLotId(lotId);
     }

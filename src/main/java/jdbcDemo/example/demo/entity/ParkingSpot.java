@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Spot {
-    private int id;
-    private int lotId;
-    private SpotType type;
-    private SpotStatus status;
-    private int pricePerHour;
+public class ParkingSpot {
+    private int SpotID;
+    private int ParkingLotID;
+    private SpotType SpotType;
+    private SpotStatus Status;
+    private int PricePerHour;
 }

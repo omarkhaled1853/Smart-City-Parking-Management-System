@@ -38,10 +38,10 @@ public class NotificationDao {
     private Notification mapRowToNotification(ResultSet rs, int rowNum) throws SQLException{
         Notification notification = Notification
                 .builder()
-                .id(rs.getInt("NotificationID"))
-                .userId(rs.getInt("UserID"))
-                .message(rs.getString("Message"))
-                .sentAt(rs.getTimestamp("SentAt").toLocalDateTime())
+                .NotificationID(rs.getInt("NotificationID"))
+                .UserID(rs.getInt("UserID"))
+                .Message(rs.getString("Message"))
+                .SentAt(rs.getTimestamp("SentAt").toLocalDateTime())
                 .build();
 
                 return notification;
@@ -52,7 +52,7 @@ public class NotificationDao {
 
         jdbcTemplate.update(
                 query,
-                notification.getUserId(),
+                notification.getUserID(),
                 notification.getMessage(),
                 Timestamp.valueOf(notification.getSentAt()));
     }

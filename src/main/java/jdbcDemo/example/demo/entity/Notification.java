@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class Notification {
-    private int id;
-    private int userId;
-    private String message;
-    private LocalDateTime sentAt;
+    private int NotificationID;
+    private int UserID;
+    private String Message;
+    private LocalDateTime SentAt;
 }

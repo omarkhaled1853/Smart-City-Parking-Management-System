@@ -1,7 +1,7 @@
 package jdbcDemo.example.demo.controller;
 
 import jdbcDemo.example.demo.service.LotService;
-import jdbcDemo.example.demo.entity.Lot;
+import jdbcDemo.example.demo.entity.ParkingLot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ public class LotController {
     }
 
     @GetMapping
-    public List<Lot> getAllLots(){
+    public List<ParkingLot> getAllLots(){
         return lotService.getAllLots();
     }
 }

@@ -1,6 +1,6 @@
 package jdbcDemo.example.demo.dao;
 
-import jdbcDemo.example.demo.entity.Spot;
+import jdbcDemo.example.demo.entity.ParkingSpot;
 import jdbcDemo.example.demo.enums.SpotStatus;
 import jdbcDemo.example.demo.enums.SpotType;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,33 +16,33 @@ public class SpotDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Spot> getAllSpotsByLotId(int lotId){
+    public List<ParkingSpot> getAllSpotsByLotId(int lotId){
         String query = "SELECT * FROM ParkingSpot WHERE ParkingLotID = ?";
         return jdbcTemplate.query(query, (rs, rowNum) -> {
-           Spot spot = Spot.builder()
-                   .id(rs.getInt("SpotID"))
-                   .lotId(rs.getInt("ParkingLotID"))
-                   .status(SpotStatus.valueOf(rs.getString("Status")))
-                   .type(SpotType.valueOf(rs.getString("SpotType")))
-                   .pricePerHour(rs.getInt("PricePerHour"))
+           ParkingSpot parkingSpot = ParkingSpot.builder()
+                   .SpotID(rs.getInt("SpotID"))
+                   .ParkingLotID(rs.getInt("ParkingLotID"))
+                   .Status(SpotStatus.valueOf(rs.getString("Status")))
+                   .SpotType(SpotType.valueOf(rs.getString("SpotType")))
+                   .PricePerHour(rs.getInt("PricePerHour"))
                    .build();
 
-           return spot;
+           return parkingSpot;
         }, lotId);
     }
-    public Spot getSpotById(int id){
+    public ParkingSpot getSpotById(int id){
         String query = "SELECT * FROM ParkingSpot WHERE SpotID = ?";
 
         return jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
-            Spot spot = Spot.builder()
-                    .id(rs.getInt("SpotID"))
-                    .lotId(rs.getInt("ParkingLotID"))
-                    .status(SpotStatus.valueOf(rs.getString("Status")))
-                    .type(SpotType.valueOf(rs.getString("SpotType")))
-                    .pricePerHour(rs.getInt("PricePerHour"))
+            ParkingSpot parkingSpot = ParkingSpot.builder()
+                    .SpotID(rs.getInt("SpotID"))
+                    .ParkingLotID(rs.getInt("ParkingLotID"))
+                    .Status(SpotStatus.valueOf(rs.getString("Status")))
+                    .SpotType(SpotType.valueOf(rs.getString("SpotType")))
+                    .PricePerHour(rs.getInt("PricePerHour"))
                     .build();
 
-            return spot;
+            return parkingSpot;
         }, id);
     }
     public Boolean modifySpotStatus(int id, String status){

@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class Payment {
-    private int id;
-    private int reservationId;
-    private float amount;
-    private LocalDateTime paymentTime;
-    private PaymentStatus status;
+    private int PaymentID;
+    private int ReservationID;
+    private float Amount;
+    private LocalDateTime PaymentTime;
+    private PaymentStatus PaymentStatus;
 }
