@@ -98,17 +98,17 @@ export function ManagerPage() {
   const adjustPriceIfNeeded = (lotId: number, spots: any[]) => { 
     const totalSpots = spots.length;
     const reservedOrOccupied = spots.filter(
-      (spot) => spot.status === "Reserved" || spot.status === "Occupied"
+      (spot) => spot.status === "RESERVED" || spot.status === "OCCUPIED"
     ).length;
   
     const percentageOccupied = (reservedOrOccupied / totalSpots) * 100;
     const pricingModel = parkingLots.find((lot) => lot.parkingLotID === lotId)?.pricingModel;
     // Adjust prices based on pricing model
-    if (pricingModel === "Dynamic") {
+    if (pricingModel === "DYNAMIC") {
       if (percentageOccupied > 50 && !priceAdjusted[lotId]) {
         // Increase price by 10% once
         spots.forEach((spot) => {
-          if (spot.status === "Available" || spot.status === "Reserved") {
+          if (spot.status === "AVALIABLE" || spot.status === "RESERVED") {
             spot.pricePerHour = spot.pricePerHour * 1.1;
           }
         });
@@ -116,13 +116,13 @@ export function ManagerPage() {
       } else if (percentageOccupied < 50 && priceAdjusted[lotId]) {
         // Decrease price by 10% once
         spots.forEach((spot) => {
-          if (spot.status === "Available" || spot.status === "Reserved") {
+          if (spot.status === "AVALIABLE" || spot.status === "RESERVED") {
             spot.pricePerHour = spot.pricePerHour * 0.9;
           }
         });
         setPriceAdjusted((prev) => ({ ...prev, [lotId]: false }));
       }
-    } else if (pricingModel === "Fixed") {
+    } else if (pricingModel === "STATIC") {
       // No price adjustment needed for fixed pricing
       console.log(`Lot ${lotId} has fixed pricing. No adjustments made.`);
     } else {
@@ -196,7 +196,7 @@ export function ManagerPage() {
     }
   };
 
-  const generateReport = async (type: string) => {
+  const showReport = async (type: string) => {
     try {
       await axios.get(`http://localhost:8080/api/manager/reports/${type}`);
       console.log("Report generated successfully!");
@@ -323,9 +323,9 @@ export function ManagerPage() {
                     <span className="font-semibold">Status: </span>
                     <span
                       className={
-                        spot.status === "Available"
+                        spot.status === "AVAILABLE"
                           ? "text-green-500 font-medium"
-                          : spot.status === "Occupied"
+                          : spot.status === "OCCUPIED"
                           ? "text-red-500 font-medium"
                           : "text-yellow-500 font-medium"
                       }
@@ -365,16 +365,10 @@ export function ManagerPage() {
       <section className="mb-8">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Reports</h2>
         <button
-          onClick={() => generateReport("parkinglots")}
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mr-4"
-        >
-          Show Parking Lots Report
-        </button>
-        <button
-          onClick={() => generateReport("parkingspots")}
+          onClick={() => showReport("parkingspots")}
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
         >
-          Show Parking Spots Report
+          Show Parking analysis Report
         </button>
         <div className="mt-4 bg-gray-100 p-4 rounded shadow-inner">
         </div>
@@ -399,9 +393,9 @@ export function ManagerPage() {
                     }
                     className="w-full border border-gray-300 rounded p-2"
                   >
-                    <option value="Available">Available</option>
-                    <option value="Occupied">Occupied</option>
-                    <option value="Reserved">Reserved</option>
+                    <option value="AVAILABLE">Available</option>
+                    <option value="OCCUPIED">Occupied</option>
+                    <option value="RESERVED">Reserved</option>
                   </select>
                 </div>
               )}
