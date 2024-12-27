@@ -21,15 +21,15 @@ public class NotificationDao {
     }
 
     public List<Notification> getAllNotifications(int userId){
-        String query = "SELECT * FROM notification WHERE userId = ?";
+        String query = "SELECT * FROM Notification WHERE UserID = ?";
 
         return jdbcTemplate.query(query, this::mapRowToNotification, userId);
     }
     public void sendNotificationToDriver(int userId, String message){
-        String query = "INSERT INTO notification (userId, message, sentAt) VALUES(?, ?, NOW())";
+        String query = "INSERT INTO Notification (UserID, Message, SentAt) VALUES(?, ?, NOW())";
         jdbcTemplate.update(query, userId, message);
 
-        String selectQuery = "SELECT * FROM notification WHERE userId = ? ORDER BY id DESC LIMIT 1";
+        String selectQuery = "SELECT * FROM Notification WHERE UserID = ? ORDER BY NotificationID DESC LIMIT 1";
         Notification notification = jdbcTemplate.queryForObject(selectQuery, this::mapRowToNotification, userId);
 
         messagingTemplate.convertAndSend("/notification/subscribe/" + userId, notification);
@@ -38,17 +38,17 @@ public class NotificationDao {
     private Notification mapRowToNotification(ResultSet rs, int rowNum) throws SQLException{
         Notification notification = Notification
                 .builder()
-                .id(rs.getInt("id"))
-                .userId(rs.getInt("userId"))
-                .message(rs.getString("message"))
-                .sentAt(rs.getTimestamp("sentAt").toLocalDateTime())
+                .id(rs.getInt("NotificationID"))
+                .userId(rs.getInt("UserID"))
+                .message(rs.getString("Message"))
+                .sentAt(rs.getTimestamp("SentAt").toLocalDateTime())
                 .build();
 
                 return notification;
     }
 
     public void addNotification(Notification notification){
-        String query = "INSERT INTO notification (userId, message, sentAt) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Notification (UserID, Message, SentAt) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(
                 query,

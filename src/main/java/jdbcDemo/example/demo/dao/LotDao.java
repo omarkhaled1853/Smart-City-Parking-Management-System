@@ -16,14 +16,14 @@ public class LotDao {
     }
 
     public List<Lot> getAllLots(){
-        String query = "SELECT * FROM parkingLot";
+        String query = "SELECT * FROM ParkingLot";
 
         return jdbcTemplate.query(query,  (rs, rowNum) ->{
             Lot lot = Lot.builder()
-                    .id(rs.getInt("id"))
-                    .name(rs.getString("name"))
-                    .location(rs.getString("location"))
-                    .capacity(rs.getInt("capacity"))
+                    .id(rs.getInt("ParkingLotID"))
+                    .name(rs.getString("Name"))
+                    .location(rs.getString("Location"))
+                    .capacity(rs.getInt("Capacity"))
                     .build();
 
             return lot;
@@ -32,14 +32,14 @@ public class LotDao {
     }
 
     public Lot getLotById(int id){
-        String query = "SELECT * FROM parkingLot WHERE id = ?";
+        String query = "SELECT * FROM ParkingLot WHERE ParkingLotID = ?";
         try {
             return jdbcTemplate.queryForObject(query, (rs, rowNum) ->{
                 Lot lot = Lot.builder()
-                        .id(rs.getInt("id"))
-                        .name(rs.getString("name"))
-                        .location(rs.getString("location"))
-                        .capacity(rs.getInt("capacity"))
+                        .id(rs.getInt("ParkingLotID"))
+                        .name(rs.getString("Name"))
+                        .location(rs.getString("Location"))
+                        .capacity(rs.getInt("Capacity"))
                         .build();
 
                 return lot;

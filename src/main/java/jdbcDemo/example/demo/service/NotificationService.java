@@ -19,8 +19,4 @@ public class NotificationService {
     public void sendNotificationToDriver(int userId, String message){
         notificationDao.sendNotificationToDriver(userId, message);
     }
-
-//    public void addNotification(Notification notification){
-//        notificationDao.addNotification(notification);
-//    }
 }
