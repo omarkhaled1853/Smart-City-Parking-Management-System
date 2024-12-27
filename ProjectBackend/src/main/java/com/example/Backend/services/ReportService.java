@@ -6,6 +6,7 @@ import java.io.*;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
+import java.awt.Desktop;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
@@ -56,10 +57,49 @@ public class ReportService {
 
             // Export the report to PDF
             exportReportToPdf(jasperPrint, outputFilePath);
+            
+
+
         }
 
         return "Parking Spot Report Done";
     }
+
+    public String showParkingSpotReport() throws Exception{
+        String outputFilePath = "src/main/resources/reports/ParkingSpotReport.pdf";
+        File pdfFile = new File(outputFilePath);
+        if (pdfFile.exists()) {
+            try {
+                // Using the "start" command to open the PDF in the default viewer
+                String command = "cmd /c start " + pdfFile.getPath();
+                Runtime.getRuntime().exec(command); // Execute the command
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("PDF file was not generated.");
+        }
+        return "Parking Spot Report Generated Successfully";
+    }
+
+    public String showParkingLotReport() throws Exception{
+        String outputFilePath = "src/main/resources/reports/ParkingLotReport.pdf";
+        File pdfFile = new File(outputFilePath);
+        if (pdfFile.exists()) {
+            try {
+                // Using the "start" command to open the PDF in the default viewer
+                String command = "cmd /c start " + pdfFile.getPath();
+                Runtime.getRuntime().exec(command); // Execute the command
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("PDF file was not generated.");
+        }
+        return "Parking Lot Report Generated Successfully";
+    }
+
+    
 
     private void exportReportToPdf(JasperPrint jasperPrint, String outputFilePath) throws Exception {
         File outputFile = new File(outputFilePath);
@@ -87,6 +127,22 @@ public class ReportService {
 
             // Export the report to PDF
             exportReportToPdf(jasperPrint, outputFilePath);
+
+            File pdfFile = new File(outputFilePath);
+            if (pdfFile.exists()) {
+                try {
+                    // Using the "start" command to open the PDF in the default viewer
+                    String command = "cmd /c start " + pdfFile.getPath();
+                    Runtime.getRuntime().exec(command); // Execute the command
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("PDF file was not generated.");
+            }
+
+
+        
         }
         return "Top Users and Lots Report Generated Successfully";
     }

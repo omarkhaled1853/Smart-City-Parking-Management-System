@@ -116,8 +116,6 @@ public class ParkingLotController {
         }
     }
 
-    
-
     @DeleteMapping("/parkingspots/{id}")
     public String deleteParkingSpot(@PathVariable int id) {
         try {
@@ -130,18 +128,18 @@ public class ParkingLotController {
    
     // Report Endpoints
     @GetMapping("/reports/parkinglots")
-    public String generateParkingLotReport() {
+    public String showParkingLotReport() {
         try {
-            return reportService.generateParkingLotReport();
+            return reportService.showParkingLotReport();
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }
     }
 
     @GetMapping("/reports/parkingspots")
-    public String generateParkingSpotReport() {
+    public String showParkingSpotReport() {
         try {
-            return reportService.generateParkingSpotReport();
+            return reportService.showParkingSpotReport();
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }
