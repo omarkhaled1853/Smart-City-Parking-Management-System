@@ -84,21 +84,7 @@ export function ManagerPage() {
     }
   };
   
-  const sendAlertToManager = async (message:String , userId: number) => {
-    try {
-      const response = await axios.post('http://localhost:8080/Alerts', null, {
-        params: {
-          message: message,
-          userId: userId,
-        },
-      });
-  
-      console.log('Notification sent successfully', response);
-    } catch (error) {
-      console.error('Error sending notification:', error);
-    }
-  };
-
+ 
   const adjustPriceIfNeeded = (lotId: number, spots: any[]) => {
     const totalSpots = spots.length;
     const reservedOrOccupied = spots.filter(
@@ -262,13 +248,8 @@ export function ManagerPage() {
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
-      {/* <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-blue-700">Manager Dashboard</h1>
-        {userId && <AlertBell userId={userId} />}
-      </div> */}
-      {
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-semibold">Manager Dashboard</h1>
         <div className="relative">
           <button
             onClick={handleNotificationClick}
@@ -308,7 +289,7 @@ export function ManagerPage() {
           )}
         </div>
       </div>
-}
+
       {parkingLots.map((lot) => (
         <section key={lot.parkingLotID} className="mb-8 bg-white shadow-md rounded p-6">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">

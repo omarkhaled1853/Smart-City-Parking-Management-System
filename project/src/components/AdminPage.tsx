@@ -7,6 +7,7 @@ export function AdminPage() {
   const [priceAdjusted, setPriceAdjusted] = useState<Record<number, boolean>>({});
   const [parkingLots, setParkingLots] = useState<{
     parkingLotID: number;
+    UserID:number;
     name: string;
     location: string;
     capacity: number;
@@ -77,7 +78,21 @@ export function AdminPage() {
   }, [users]);
   
 
+  const sendAlertToManager = async (message:String , userId: number) => {
+    try {
+      const response = await axios.post('http://localhost:8080/Alerts', null, {
+        params: {
+          message: message,
+          userId: userId,
+        },
+      });
   
+      console.log('Notification sent successfully', response);
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
+  };
+
 
   const fetchUsers = async () => {
     try {
@@ -119,19 +134,27 @@ export function AdminPage() {
   
     const percentageOccupied = (reservedOrOccupied / totalSpots) * 100;
   
+    // Check if the parking lot is completely occupied
+    if (percentageOccupied === 100 && !priceAdjusted[lotId]) {
+      const lot = parkingLots.find(lot => lot.parkingLotID === lotId);
+      if (lot) {
+        sendAlertToManager(`Parking lot "${lot.name}" is completely occupied.`, lot.UserID); // Send alert to the manager
+      }
+      setPriceAdjusted((prev) => ({ ...prev, [lotId]: true }));
+    }
+  
+    // Adjust prices if needed based on occupancy
     if (percentageOccupied > 50 && !priceAdjusted[lotId]) {
-      // Increase price by 10% once
       spots.forEach((spot) => {
         if (spot.status === "Available" || spot.status === "Reserved") {
-          spot.pricePerHour = spot.pricePerHour * 1.1;
+          spot.pricePerHour = spot.pricePerHour * 1.1; // Increase price by 10%
         }
       });
       setPriceAdjusted((prev) => ({ ...prev, [lotId]: true }));
     } else if (percentageOccupied < 50 && priceAdjusted[lotId]) {
-      // Decrease price by 10% once
       spots.forEach((spot) => {
         if (spot.status === "Available" || spot.status === "Reserved") {
-          spot.pricePerHour = spot.pricePerHour * 0.9;
+          spot.pricePerHour = spot.pricePerHour * 0.9; // Decrease price by 10%
         }
       });
       setPriceAdjusted((prev) => ({ ...prev, [lotId]: false }));
