@@ -1,20 +1,22 @@
 export interface Lot {
-  id: number;
+  parkingLotID: number;
   name: string;
   location: string;
   capacity: number;
+  pricingModel: 'STATIC'|'DYNAMIC';
+  createdAt:string;
 }
 
 export interface Spot {
-  id: number;
-  lotId: number;
-  type: 'REGULAR' | 'EVCHARGING' | 'DISABLED';
+  spotID: number;
+  parkingLotID: number;
+  spotType: 'REGULAR' | 'EVCHARGING' | 'DISABLED';
   status: 'AVAILABLE' | 'OCCUPIED' | 'RESERVED';
   pricePerHour: number;
 }
 
 export interface Notification {
-  id: number;
+  notificationID: number;
   userId: number;
   message: string;
   sentAt: string;

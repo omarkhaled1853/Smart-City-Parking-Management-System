@@ -58,7 +58,7 @@ export default function HomePage() {
         <SearchBar onSearch={handleSearch} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredGarages.map((garage) => (
-            <GarageCard key={garage.id} garage={garage} />
+            <GarageCard key={garage.parkingLotID} garage={garage} />
           ))}
         </div>
         {filteredGarages.length === 0 && (

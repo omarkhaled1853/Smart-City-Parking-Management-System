@@ -12,11 +12,11 @@ export default function GarageCard({ garage }: GarageCardProps) {
 
   return (
     <div 
-      onClick={() => navigate(`/garage/${garage.id}`)}
+      onClick={() => navigate(`/garage/${garage.parkingLotID}`)}
       className="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer transform transition-transform hover:scale-105"
     >
       <img 
-        src={`/images/garage${garage.id}.png`}
+        src={`/images/garage${garage.parkingLotID}.png`}
         alt={garage.name}
         className="w-full h-48 object-cover"
       />

@@ -16,7 +16,7 @@ export default function SpotList({ title, spots, showReservation = false, onSpot
       <div className="space-y-4">
         {spots.map((spot) => (
           <SpotCard 
-            key={spot.id} 
+            key={spot.spotID} 
             spot={spot} 
             showReservation={showReservation && spot.status === 'AVAILABLE'}
             onSpotUpdate={onSpotUpdate}

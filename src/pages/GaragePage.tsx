@@ -28,7 +28,7 @@ export default function GaragePage() {
   const handleSpotUpdate = (updatedSpot: Spot) => {
     setSpots(currentSpots => 
       currentSpots.map(spot => 
-        spot.id === updatedSpot.id ? updatedSpot : spot
+        spot.spotID === updatedSpot.spotID ? updatedSpot : spot
       )
     );
   };

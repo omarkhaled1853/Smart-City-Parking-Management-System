@@ -31,7 +31,7 @@ export default function ReservationModal({ spot, onClose, onReserve }: Reservati
   const handlePayment = async (method: 'cash' | 'card') => {
     try {
       const reservationDetails: ReservationDetails = {
-        spotId: spot.id,
+        spotId: spot.spotID,
         duration,
         paymentMethod: method,
         totalPrice,
@@ -43,16 +43,16 @@ export default function ReservationModal({ spot, onClose, onReserve }: Reservati
       await onReserve(reservationDetails);
       
       addNotification({
-        id: Date.now(),
+        notificationID: Date.now(),
         userId: 1,
-        message: `Successfully reserved spot #${spot.id} for ${duration} hours`,
+        message: `Successfully reserved spot #${spot.spotID} for ${duration} hours`,
         type: 'success',
         sentAt: new Date().toISOString()
       });
       onClose();
     } catch (error) {
       addNotification({
-        id: Date.now(),
+        notificationID: Date.now(),
         userId: 1,
         message: 'Failed to reserve spot',
         type: 'error',
@@ -65,7 +65,7 @@ export default function ReservationModal({ spot, onClose, onReserve }: Reservati
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg max-w-md w-full p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Reserve Spot #{spot.id}</h2>
+          <h2 className="text-xl font-semibold">Reserve Spot #{spot.spotID}</h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
             <X className="w-5 h-5" />
           </button>

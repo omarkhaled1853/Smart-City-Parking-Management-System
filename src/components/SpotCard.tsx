@@ -35,7 +35,7 @@ export default function SpotCard({ spot, showReservation = false, onSpotUpdate }
     try {
       setIsReserving(true);
       const success = await updateSpotStatus({
-        id: spot.id,
+        id: spot.spotID,
         status: 'Reserved',
         userId: 1,
         startDate: details.startDate,
@@ -53,9 +53,9 @@ export default function SpotCard({ spot, showReservation = false, onSpotUpdate }
         setShowModal(false);
         
         addNotification({
-          id: Date.now(),
+          notificationID: Date.now(),
           userId: 1,
-          message: `Successfully reserved spot #${spot.id} for ${details.duration} hours`,
+          message: `Successfully reserved spot #${spot.spotID} for ${details.duration} hours`,
           type: 'success',
           sentAt: new Date().toISOString()
         });
@@ -64,7 +64,7 @@ export default function SpotCard({ spot, showReservation = false, onSpotUpdate }
       }
     } catch (error) {
       addNotification({
-        id: Date.now(),
+        notificationID: Date.now(),
         userId: 1,
         message: 'Failed to reserve spot - Please try again',
         type: 'error',
@@ -79,10 +79,10 @@ export default function SpotCard({ spot, showReservation = false, onSpotUpdate }
     <>
       <div className="border rounded-lg p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
         <div className="flex items-center gap-3">
-          <SpotTypeIcon type={spot.type} />
+          <SpotTypeIcon type={spot.spotType} />
           <div>
-            <p className="font-medium">Spot #{spot.id}</p>
-            <p className="text-sm text-gray-600">{spot.type}</p>
+            <p className="font-medium">Spot #{spot.spotID}</p>
+            <p className="text-sm text-gray-600">{spot.spotType}</p>
           </div>
         </div>
         <div className="flex items-center gap-4">

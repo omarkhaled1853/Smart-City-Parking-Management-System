@@ -39,7 +39,7 @@ export default function AppBar() {
               {notifications.length > 0 ? (
                 notifications.map((notification) => (
                   <div
-                    key={notification.id}
+                    key={notification.notificationID}
                     className={`p-4 border-b hover:bg-gray-50 ${
                       !notification.read ? 'bg-blue-50' : ''
                     }`}
