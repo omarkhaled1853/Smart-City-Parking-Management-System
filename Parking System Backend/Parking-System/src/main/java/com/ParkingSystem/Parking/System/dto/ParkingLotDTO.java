@@ -1,15 +1,13 @@
 package com.ParkingSystem.Parking.System.dto;
 
 import com.ParkingSystem.Parking.System.enums.ParkingLotPricingModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class ParkingLotDTO {
     private String name;
     private String location;

@@ -39,7 +39,7 @@ public class NotificationRepository {
 
         addNotification(userId, message);
 
-        String selectQuery = "SELECT message, sentAt FROM notification WHERE userID = ? ORDER BY id DESC LIMIT 1";
+        String selectQuery = "SELECT message, sentAt FROM notification WHERE userID = ? ORDER BY NotificationID DESC LIMIT 1";
         NotificationDTO notificationDTO = jdbcTemplate.queryForObject(selectQuery, Mapper::toNotificationDto, userId);
 
         messagingTemplate.convertAndSend("/notification/subscribe/" + userId, notificationDTO);

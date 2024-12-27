@@ -52,15 +52,17 @@ public class Mapper {
 
     public static NearExpireReservationDTO toNearExpireReservationDto (ResultSet resultSet) {
         try {
-            int userId = resultSet.getInt(1);
-            int spotId = resultSet.getInt(2);
-            ParkingSpotType spotType = ParkingSpotType.valueOf(resultSet.getString(3));
-            ParkingSpotStatus parkingSpotStatus = ParkingSpotStatus.valueOf(resultSet.getString(4));
-            String name = resultSet.getString(5);
-            String location = resultSet.getString(6);
-            ParkingLotPricingModel pricingModel = ParkingLotPricingModel.valueOf(resultSet.getString(7));
+            int reservationId = resultSet.getInt(1);
+            int userId = resultSet.getInt(2);
+            int spotId = resultSet.getInt(3);
+            ParkingSpotType spotType = ParkingSpotType.valueOf(resultSet.getString(4));
+            ParkingSpotStatus parkingSpotStatus = ParkingSpotStatus.valueOf(resultSet.getString(5));
+            String name = resultSet.getString(6);
+            String location = resultSet.getString(7);
+            ParkingLotPricingModel pricingModel = ParkingLotPricingModel.valueOf(resultSet.getString(8));
 
             return NearExpireReservationDTO.builder()
+                    .reservationId(reservationId)
                     .userId(userId)
                     .parkingSpot(new ParkingSpotDTO(spotId, spotType, parkingSpotStatus))
                     .parkingLot(new ParkingLotDTO(name, location, pricingModel))
