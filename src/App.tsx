@@ -4,6 +4,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import AppBar from './components/AppBar';
 import HomePage from './pages/HomePage';
 import GaragePage from './pages/GaragePage';
+import ReservationList from './components/ReservationList';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/garage/:id" element={<GaragePage />} />
+            <Route path="/profile" element={<ReservationList userId={1} />} />
           </Routes>
         </div>
       </Router>
