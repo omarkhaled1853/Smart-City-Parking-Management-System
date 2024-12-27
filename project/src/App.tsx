@@ -4,6 +4,7 @@ import { AuthCard } from './components/auth/AuthCard';
 import { LoginForm } from './components/auth/LoginForm';
 import { SignupForm } from './components/auth/SignupForm';
 import { ManagerPage } from './components/ManagerPage';
+import { AdminPage } from './components/AdminPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/login" element={<AuthCard title="Sign In"><LoginForm /></AuthCard>} />
           <Route path="/signup" element={<AuthCard title="Create Account"><SignupForm /></AuthCard>} />
           <Route path="/manager" element={<ManagerPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/" element={<AuthCard title="Sign In"><LoginForm /></AuthCard>} />
         </Routes>
       </div>

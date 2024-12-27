@@ -38,14 +38,14 @@ public class ParkingLotController {
         }
     }
 
-    // @GetMapping("/parkinglots")
-    // public List<ParkingLotDTO> getAllParkingLots() {
-    //     try {
-    //         return parkingLotRepository.getAllParkingLots();
-    //     } catch (Exception e) {
-    //         throw new RuntimeException("Error fetching parking lots: " + e.getMessage());
-    //     }
-    // }
+    @GetMapping("/parkinglots")
+    public List<ParkingLotDTO> getAllParkingLots() {
+        try {
+            return parkingLotRepository.getAllParkingLots();
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching parking lots: " + e.getMessage());
+        }
+    }
     @GetMapping("/parkinglots/{id}")
     public List<ParkingLotDTO> getSpesficParkingLots(@PathVariable int id) {
         try {
