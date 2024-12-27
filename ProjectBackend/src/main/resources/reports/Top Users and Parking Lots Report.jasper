@@ -34,15 +34,15 @@
 	<detail>
 		<band height="20">
 			<textField>
-				<reportElement x="0" y="0" width="150" height="20" uuid="22d29cd4-b385-4946-b99e-24ed823b3ace"/>
+				<reportElement x="0" y="0" width="150" height="20" uuid="93020e0a-c966-4d02-8db5-d1d381cf8c10"/>
 				<textFieldExpression><![CDATA[$F{Category}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="150" y="0" width="200" height="20" uuid="fc2e0375-46e9-4d7f-a7c9-2572b0cc387b"/>
+				<reportElement x="150" y="0" width="200" height="20" uuid="2a25cb9e-e7d7-44d5-be2a-c4881f73b49d"/>
 				<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="350" y="0" width="150" height="20" uuid="23369ef6-08de-487a-a974-47429a3fbae9"/>
+				<reportElement x="350" y="0" width="150" height="20" uuid="7f5bef24-ee9d-47c2-86c8-b45d8cf28949"/>
 				<textFieldExpression><![CDATA[$F{Value}]]></textFieldExpression>
 			</textField>
 		</band>

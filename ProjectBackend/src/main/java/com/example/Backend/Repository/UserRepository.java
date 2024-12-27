@@ -12,6 +12,8 @@ import jakarta.annotation.PostConstruct;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class UserRepository {
@@ -58,6 +60,16 @@ public class UserRepository {
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, roleName);
         return count != null && count > 0;
     }
+
+    // i want function return only managers
+    public List<Map<String, Object>> getAllManagers() {
+    String sql = "SELECT * FROM User WHERE UserID IN (SELECT UserID FROM UserRoles WHERE RoleID = 2)";
+    return jdbcTemplate.queryForList(sql);
+}
+
+    
+
+
 
 
     // Check if email already exists

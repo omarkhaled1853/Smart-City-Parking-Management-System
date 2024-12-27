@@ -3,6 +3,7 @@ import axios from "axios";
 
 
 export function AdminPage() {
+  
   const [priceAdjusted, setPriceAdjusted] = useState<Record<number, boolean>>({});
   const [parkingLots, setParkingLots] = useState<{
     parkingLotID: number;
@@ -31,6 +32,28 @@ export function AdminPage() {
     } | null;
     editType: "status" | "pricing" | null;  // new field for tracking the edit type
   }>({ show: false, lotId: null, spot: null, editType: null });
+  const [users, setUsers] = useState<{ UserID: string; name: string }[]>([]); // New state for users (managers)
+
+
+  const [newLot, setNewLot] = useState({
+    name: "",
+    UserID : "",
+    location: "",
+    capacity: 0,
+    pricingModel: "",
+  });
+
+  // New state for adding a new parking spot
+  const [newSpot, setNewSpot] = useState({
+    parkingLotID: 0,
+    spotType: "",
+    status: "Available",
+    pricePerHour: 0,
+  });
+
+  // New states to manage the visibility of the add forms
+  const [showAddLotForm, setShowAddLotForm] = useState(false);
+  const [showAddSpotForm, setShowAddSpotForm] = useState(false);
 
 
 
@@ -40,6 +63,7 @@ export function AdminPage() {
 
   // Fetch Parking Lots and their spots
   useEffect(() => {
+    fetchUsers();
     fetchParkingLots();
     // const interval = setInterval(() => {
     //   fetchParkingLots();
@@ -48,7 +72,28 @@ export function AdminPage() {
     // return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    console.log("Updated users state:", users); // Log updated state when it changes
+  }, [users]);
   
+
+  
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/Admin/users"); // Fetch users
+      const mappedUsers = response.data.map((user: any) => ({
+        UserID: user.UserID,
+        name: user.Name, // Ensure this matches the API response field
+      }));
+      setUsers(mappedUsers); // Set the corrected users data
+      console.log("Mapped users:", mappedUsers);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+  
+
 
   const fetchParkingLots = async () => {
     try {
@@ -149,11 +194,21 @@ export function AdminPage() {
     }
   };
 
+  const generateReport = async (type: string) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/Admin/reports/${type}`);
+      setReports(response.data);
+      console.log("Report generated successfully!");
+    } catch (error) {
+      console.error("Error generating report:", (error as Error).message);
+    }
+  };
+
   const GetReport = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/Admin/reports/analysis`);
+      const response = await axios.get(`http://localhost:8080/Admin/reports/analysis`);
       setReports(response.data);
-      console.log("OK");
+      console.log("Report is displayed successfully!");
     } catch (error) {
       console.error("Error showing report:", (error as Error).message);
     }
@@ -180,31 +235,31 @@ export function AdminPage() {
     }
   };
 
-//   const addParkingLot = async () => {
-//     try {
-//       await axios.post("http://localhost:8080/api/manager/parkinglots", newLot);
-//       alert("Parking Lot added successfully!");
-//       setNewLot({ name: "", location: "", capacity: 0, pricingModel: "" }); // Reset form
-//       setShowAddLotForm(false); // Close the form
-//       fetchParkingLots(); // Refresh the parking lots
-//     } catch (error) {
-//       console.error("Error adding parking lot:", (error as Error).message);
-//     }
-//   };
+  const addParkingLot = async () => {
+    try {
+      await axios.post("http://localhost:8080/api/manager/parkinglots", newLot);
+      alert("Parking Lot added successfully!");
+      setNewLot({ name: "",UserID: "", location: "", capacity: 0, pricingModel: "" }); // Reset form
+      console.log(newLot);
+      setShowAddLotForm(false); // Close the form
+      fetchParkingLots();
+      } catch (error) {
+      console.error("Error adding parking lot:", (error as Error).message);
+    }
+  };
 
-//   const addParkingSpot = async () => {
-//     try {
-//       console.log(newSpot);
-//       await axios.post("http://localhost:8080/api/manager/parkingspots", newSpot);
-//       alert("Parking Spot added successfully!");
-//       setNewSpot({ parkingLotID: 0, spotType: "", status: "Available", pricePerHour: 0}); // Reset form
-//       setShowAddSpotForm(false); // Close the form
-//       fetchParkingLots(); // Refresh the parking spots
-//     } catch (error) {
-//       console.error("Error adding parking spot:", (error as Error).message);
-//     }
-//   };
-
+  const addParkingSpot = async () => {
+    try {
+      console.log(newSpot);
+      await axios.post("http://localhost:8080/api/manager/parkingspots", newSpot);
+      alert("Parking Spot added successfully!");
+      setNewSpot({ parkingLotID: 0, spotType: "", status: "Available", pricePerHour: 0}); // Reset form
+      setShowAddSpotForm(false); // Close the form
+      fetchParkingLots();
+      } catch (error) {
+      console.error("Error adding parking spot:", (error as Error).message);
+    }
+  };
   
 
   return (
@@ -272,23 +327,57 @@ export function AdminPage() {
           ) : (
             <p>No parking spots available</p>
           )}
+          {/* Button to add new parking spot */}
+          <button
+            onClick={() => {
+              setNewSpot({ ...newSpot, parkingLotID: lot.parkingLotID }); // Set lotId for the new spot
+              setShowAddSpotForm(true);
+            }}
+            className="mt-4 text-blue-500 hover:underline"
+          >
+            Add Parking Spot
+          </button>
         
         </section>
+
       ))}
-      
-      <section className="mb-8">
+      {/* Button to add new parking lot */}
+      <button
+        onClick={() => setShowAddLotForm(true)}
+        className="text-blue-500 hover:underline"
+      >
+        Add New Parking Lot
+      </button>
+
+
+<section className="mb-8">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Reports</h2>
+        <button
+          onClick={() => generateReport("parkinglots")}
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mr-4"
+        >
+          Generate Parking Lots Report
+        </button>
+        <button
+          onClick={() => generateReport("parkingspots")}
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mr-4"
+        >
+          Generate Parking Spots Report
+        </button>
+
         <button
           onClick={() => GetReport()}
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mr-4"
         >
           View Analysis
         </button>
-        
         <div className="mt-4 bg-gray-100 p-4 rounded shadow-inner">
           <pre>{reports}</pre>
         </div>
       </section>
+      
+
+      
 
       {editModal.show && editModal.spot && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -344,6 +433,141 @@ export function AdminPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+       {/* Form for adding a new parking lot */}
+       {showAddLotForm && (
+        <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h3 className="text-xl font-semibold mb-4">Add New Parking Lot</h3>
+            <div className="space-y-4">
+              <input
+                type="text"
+                className="border p-2 w-full"
+                placeholder="Lot Name"
+                value={newLot.name}
+                onChange={(e) => setNewLot({ ...newLot, name: e.target.value })}
+              />
+              <input
+                type="text"
+                className="border p-2 w-full"
+                placeholder="Location"
+                value={newLot.location}
+                onChange={(e) => setNewLot({ ...newLot, location: e.target.value })}
+              />
+              <input
+                type="number"
+                className="border p-2 w-full"
+                placeholder="Capacity"
+                value={newLot.capacity}
+                onChange={(e) => setNewLot({ ...newLot, capacity: +e.target.value })}
+              />
+              <select
+                value={newLot.pricingModel}
+                onChange={(e) => setNewLot({ ...newLot, pricingModel: e.target.value })}
+                className="border p-2 w-full"
+              >
+                <option value="">Select Pricing Model</option>
+                <option value="Static">Static</option>
+                <option value="Dynamic">Dynamic</option>
+              </select>
+
+              {/* Dropdown for selecting manager (UserID) */}
+              <select
+                value={newLot.UserID}
+                onChange={(e) => setNewLot({ ...newLot, UserID: e.target.value })}
+                className="border p-2 w-full"
+              >
+                <option value="">Select Manager</option>
+                {users.map((user) => (
+                  <option key={user.UserID} value={user.UserID}>
+                    {user.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mt-4 flex justify-between">
+              <button
+                onClick={() => setShowAddLotForm(false)}
+                className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={addParkingLot}
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+      {/* Modal for Adding a New Parking Spot */}
+      {showAddSpotForm && (
+        <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h3 className="text-xl font-semibold mb-4">Add New Parking Spot</h3>
+            <div className="space-y-4">
+              {/* Spot Type Selector */}
+              <select
+                value={newSpot.spotType}
+                onChange={(e) => setNewSpot({ ...newSpot, spotType: e.target.value })}
+                className="border p-2 w-full"
+              >
+                <option value="">Select Spot Type</option>
+                <option value="Regular">Regular</option>
+                <option value="Disabled">Disabled</option>
+                <option value="EVCharging">EVCharging</option>
+              </select>
+
+              {/* Status Selector */}
+              <select
+                value={newSpot.status}
+                onChange={(e) => setNewSpot({ ...newSpot, status: e.target.value })}
+                className="border p-2 w-full"
+              >
+                <option value="Available">Available</option>
+                <option value="Occupied">Occupied</option>
+                <option value="Reserved">Reserved</option>
+              </select>
+
+              {/* Price Per Hour */}
+              <input
+                type="number"
+                className="border p-2 w-full"
+                placeholder="Price per Hour"
+                value={newSpot.pricePerHour}
+                onChange={(e) => setNewSpot({ ...newSpot, pricePerHour: +e.target.value })}
+              />
+
+              {/* Duration (optional)
+              <input
+                type="text"
+                className="border p-2 w-full"
+                placeholder="Duration (optional)"
+                value={newSpot.duration}
+                onChange={(e) => setNewSpot({ ...newSpot, duration: e.target.value })}
+              /> */}
+            </div>
+
+            <div className="mt-4 flex justify-between">
+              <button
+                onClick={() => setShowAddSpotForm(false)}
+                className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={addParkingSpot}
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+              >
+                Save
+              </button>
+            </div>
           </div>
         </div>
       )}
