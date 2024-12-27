@@ -11,10 +11,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Payment {
-    private int PaymentID;
-    private int ReservationID;
-    private float Amount;
-    private LocalDateTime PaymentTime;
-    private com.ParkingSystem.Parking.System.enums.PaymentStatus PaymentStatus;
+public class HomeNotificationDTO {
+    private int NotificationID;
+    private int UserID;
+    private String Message;
+    private LocalDateTime SentAt;
 }

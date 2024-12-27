@@ -1,7 +1,7 @@
 package com.ParkingSystem.Parking.System.service;
 
 import com.ParkingSystem.Parking.System.dao.NotificationDao;
-import com.ParkingSystem.Parking.System.dto.Notification;
+import com.ParkingSystem.Parking.System.dto.HomeNotificationDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class NotificationService {
         this.notificationDao = notificationDao;
     }
 
-    public List<Notification> getAllNotifications(int userId){
+    public List<HomeNotificationDTO> getAllNotifications(int userId){
         return notificationDao.getAllNotifications(userId);
     }
     public void sendNotificationToDriver(int userId, String message){

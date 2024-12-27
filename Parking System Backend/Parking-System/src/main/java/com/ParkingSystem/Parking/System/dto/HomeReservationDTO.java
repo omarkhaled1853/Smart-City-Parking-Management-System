@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Reservation {
-    private int ReservationID;
-    private int SpotID;
-    private int UserID;
+public class HomeReservationDTO {
+    private int reservationId;
+    private int spotId;
+    private int userId;
 
-    private Timestamp StartTime;
-    private Timestamp EndTime;
+    private Timestamp startTime;
+    private Timestamp endTime;
 
-    private ReservationStatus Status;
-    private LocalDateTime CreatedAt;
+    private ReservationStatus status;
+    private LocalDateTime createdAt;
 }

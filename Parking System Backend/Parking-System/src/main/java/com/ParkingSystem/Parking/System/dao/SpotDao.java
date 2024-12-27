@@ -1,6 +1,6 @@
 package com.ParkingSystem.Parking.System.dao;
 
-import com.ParkingSystem.Parking.System.dto.ParkingSpot;
+import com.ParkingSystem.Parking.System.dto.HomeParkingSpotDTO;
 import com.ParkingSystem.Parking.System.enums.SpotStatus;
 import com.ParkingSystem.Parking.System.enums.SpotType;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,10 +16,10 @@ public class SpotDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ParkingSpot> getAllSpotsByLotId(int lotId){
+    public List<HomeParkingSpotDTO> getAllSpotsByLotId(int lotId){
         String query = "SELECT * FROM ParkingSpot WHERE ParkingLotID = ?";
         return jdbcTemplate.query(query, (rs, rowNum) -> {
-           ParkingSpot parkingSpot = ParkingSpot.builder()
+           HomeParkingSpotDTO homeParkingSpotDTO = HomeParkingSpotDTO.builder()
                    .SpotID(rs.getInt("SpotID"))
                    .ParkingLotID(rs.getInt("ParkingLotID"))
                    .Status(SpotStatus.valueOf(rs.getString("Status")))
@@ -27,14 +27,14 @@ public class SpotDao {
                    .PricePerHour(rs.getInt("PricePerHour"))
                    .build();
 
-           return parkingSpot;
+           return homeParkingSpotDTO;
         }, lotId);
     }
-    public ParkingSpot getSpotById(int id){
+    public HomeParkingSpotDTO getSpotById(int id){
         String query = "SELECT * FROM ParkingSpot WHERE SpotID = ?";
 
         return jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
-            ParkingSpot parkingSpot = ParkingSpot.builder()
+            HomeParkingSpotDTO homeParkingSpotDTO = HomeParkingSpotDTO.builder()
                     .SpotID(rs.getInt("SpotID"))
                     .ParkingLotID(rs.getInt("ParkingLotID"))
                     .Status(SpotStatus.valueOf(rs.getString("Status")))
@@ -42,7 +42,7 @@ public class SpotDao {
                     .PricePerHour(rs.getInt("PricePerHour"))
                     .build();
 
-            return parkingSpot;
+            return homeParkingSpotDTO;
         }, id);
     }
     public Boolean modifySpotStatus(int id, String status){

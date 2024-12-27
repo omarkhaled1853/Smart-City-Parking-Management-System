@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ParkingLot {
+public class HomeParkingLotDTO {
     private int ParkingLotID;
     private String Name;
     private String Location;

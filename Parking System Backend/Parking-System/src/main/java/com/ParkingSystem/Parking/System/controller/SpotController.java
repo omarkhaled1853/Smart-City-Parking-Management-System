@@ -1,13 +1,12 @@
 package com.ParkingSystem.Parking.System.controller;
 
-import com.ParkingSystem.Parking.System.dto.ParkingSpot;
+import com.ParkingSystem.Parking.System.dto.HomeParkingSpotDTO;
 import com.ParkingSystem.Parking.System.service.NotificationService;
 import com.ParkingSystem.Parking.System.service.PaymentService;
 import com.ParkingSystem.Parking.System.service.ReservationService;
 import com.ParkingSystem.Parking.System.service.SpotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class SpotController {
     }
 
     @GetMapping("/{lotId}")
-    public List<ParkingSpot> getAllSpotsByLotId(@PathVariable int lotId){
+    public List<HomeParkingSpotDTO> getAllSpotsByLotId(@PathVariable int lotId){
 
         return spotService.getAllSpotsByLotId(lotId);
     }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ParkingSpot {
+public class HomeParkingSpotDTO {
     private int SpotID;
     private int ParkingLotID;
     private SpotType SpotType;

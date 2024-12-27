@@ -1,7 +1,7 @@
 package com.ParkingSystem.Parking.System.service;
 
 import com.ParkingSystem.Parking.System.dao.LotDao;
-import com.ParkingSystem.Parking.System.dto.ParkingLot;
+import com.ParkingSystem.Parking.System.dto.HomeParkingLotDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +15,11 @@ public class LotService {
         this.lotDao = lotDao;
     }
 
-    public List<ParkingLot> getAllLots(){
+    public List<HomeParkingLotDTO> getAllLots(){
         return lotDao.getAllLots();
     }
 
-    public ParkingLot getLotById(int id){
+    public HomeParkingLotDTO getLotById(int id){
         return lotDao.getLotById(id);
     }
 }
