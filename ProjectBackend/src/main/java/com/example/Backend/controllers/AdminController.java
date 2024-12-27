@@ -27,7 +27,7 @@ public class AdminController {
         }
     }
     @PostMapping("/Alerts")
-    public void updateMessageToManager(@RequestBody String message, @RequestBody int userId){
+    public void updateMessageToManager(@RequestParam String message, @RequestParam int userId){
         notificationService.sendNotificationToManager(userId, message);
     }
 }

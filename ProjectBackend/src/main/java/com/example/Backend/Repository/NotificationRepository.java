@@ -27,10 +27,10 @@ public class NotificationRepository {
         return jdbcTemplate.query(query, this::mapRowToNotification, userId);
     }
     public void sendNotificationToManager(int userId, String message){
-        String query = "INSERT INTO notification (userId, message, sentAt) VALUES(?, ?, NOW())";
+        String query = "INSERT INTO notification (UserID, Message, sentAt) VALUES(?, ?, NOW())";
         jdbcTemplate.update(query, userId, message);
 
-        String selectQuery = "SELECT * FROM notification WHERE userId = ? ORDER BY id DESC LIMIT 1";
+        String selectQuery = "SELECT * FROM notification WHERE UserID = ? ORDER BY NotificationID DESC LIMIT 1";
         NotificationDTO notification = jdbcTemplate.queryForObject(selectQuery, this::mapRowToNotification, userId);
 
         messagingTemplate.convertAndSend("/notification/subscribe/" + userId, notification);
@@ -39,7 +39,7 @@ public class NotificationRepository {
     private NotificationDTO mapRowToNotification(ResultSet rs, int rowNum) throws SQLException{
         NotificationDTO notification = NotificationDTO
                 .builder()
-                .id(rs.getInt("id"))
+                .NotificationID(rs.getInt("NotificationID"))
                 .userId(rs.getInt("userId"))
                 .message(rs.getString("message"))
                 .sentAt(rs.getTimestamp("sentAt").toLocalDateTime())

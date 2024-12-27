@@ -1,10 +1,26 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
+import { Bell } from 'lucide-react';
+import { useNotifications } from '../context/NotificationContext';
 
 
 
 export function ManagerPage() {
+  const { 
+    notifications, 
+    showNotifications, 
+    setShowNotifications, 
+    unreadCount,
+    markNotificationsAsRead 
+  } = useNotifications();
+
+  const handleNotificationClick = () => {
+    if (!showNotifications) {
+      markNotificationsAsRead();
+    }
+    setShowNotifications(!showNotifications);
+  };
 
   const [searchParams] = useSearchParams();
   const userId = searchParams.get("userId");
@@ -88,6 +104,22 @@ export function ManagerPage() {
       console.error("Error fetching parking lots:", (error as Error).message);
     }
   };
+  
+  const sendAlertToManager = async (message:String , userId: number) => {
+    try {
+      const response = await axios.post('http://localhost:8080/Alerts', null, {
+        params: {
+          message: message,
+          userId: userId,
+        },
+      });
+  
+      console.log('Notification sent successfully', response);
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
+  };
+
   const adjustPriceIfNeeded = (lotId: number, spots: any[]) => {
     const totalSpots = spots.length;
     const reservedOrOccupied = spots.filter(
@@ -252,8 +284,53 @@ export function ManagerPage() {
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-blue-700 mb-6">Manager Dashboard</h1>
-
+      {/* <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-blue-700">Manager Dashboard</h1>
+        {userId && <AlertBell userId={userId} />}
+      </div> */}
+      {
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <h1 className="text-xl font-semibold">Manager Dashboard</h1>
+        <div className="relative">
+          <button
+            onClick={handleNotificationClick}
+            className="p-2 hover:bg-gray-100 rounded-full relative"
+          >
+            <Bell className="w-6 h-6" />
+            {unreadCount > 0 && (
+              <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                {unreadCount}
+              </span>
+            )}
+          </button>
+          {showNotifications && (
+            <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg overflow-hidden max-h-[400px] overflow-y-auto">
+              {notifications.length > 0 ? (
+                notifications.map((notification) => (
+                  <div
+                    key={notification.NotificationID}
+                    className={`p-4 border-b hover:bg-gray-50 ${
+                      !notification.read ? 'bg-blue-50' : ''
+                    }`}
+                  >
+                    <p className={`text-sm ${notification.type === 'error' ? 'text-red-600' : 'text-green-600'}`}>
+                      {notification.message}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {new Date(notification.sentAt).toLocaleString()}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <div className="p-4 text-center text-gray-500">
+                  No notifications
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+}
       {parkingLots.map((lot) => (
         <section key={lot.parkingLotID} className="mb-8 bg-white shadow-md rounded p-6">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">
