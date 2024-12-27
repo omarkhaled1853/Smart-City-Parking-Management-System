@@ -79,8 +79,9 @@ export function AdminPage() {
   
 
   const sendAlertToManager = async (message:String , userId: number) => {
+    console.log(userId)
     try {
-      const response = await axios.post('http://localhost:8080/Alerts', null, {
+      const response = await axios.post('http://localhost:8080/Admin/Alerts', null, {
         params: {
           message: message,
           userId: userId,
@@ -133,6 +134,7 @@ export function AdminPage() {
     ).length;
   
     const percentageOccupied = (reservedOrOccupied / totalSpots) * 100;
+    const pricingModel = parkingLots.find((lot) => lot.parkingLotID === lotId)?.pricingModel;
   
     // Check if the parking lot is completely occupied
     if (percentageOccupied === 100 && !priceAdjusted[lotId]) {
@@ -144,6 +146,7 @@ export function AdminPage() {
     }
   
     // Adjust prices if needed based on occupancy
+    if (pricingModel === "Dynamic") {
     if (percentageOccupied > 50 && !priceAdjusted[lotId]) {
       spots.forEach((spot) => {
         if (spot.status === "Available" || spot.status === "Reserved") {
@@ -159,6 +162,16 @@ export function AdminPage() {
       });
       setPriceAdjusted((prev) => ({ ...prev, [lotId]: false }));
     }
+  }
+  else if (percentageOccupied < 50 && priceAdjusted[lotId]){
+     // Decrease price by 10% once
+     spots.forEach((spot) => {
+      if (spot.status === "Available" || spot.status === "Reserved") {
+        spot.pricePerHour = spot.pricePerHour * 0.9;
+      }
+    });
+    setPriceAdjusted((prev) => ({ ...prev, [lotId]: false }));
+  }
   };
   const fetchParkingSpots = async (lotId: number) => {
     try {

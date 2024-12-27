@@ -6,17 +6,25 @@
     <!-- Query to fetch data from the database -->
     <queryString>
         <![CDATA[
-            SELECT spotID, parkingLotID, spotType, status, pricePerHour
-            FROM ParkingSpot
+        SELECT 
+            SUM(p.Amount) AS TotalRevenue,
+            (COUNT(DISTINCT r.ReservationID) / COUNT(DISTINCT s.SpotID)) * 100 AS OccupancyRate,
+            COUNT(DISTINCT CASE WHEN p.PaymentStatus != 'Completed' THEN r.ReservationID END) AS UnpaidReservations
+        FROM 
+            payment p
+        JOIN 
+            reservation r ON p.ReservationID = r.ReservationID
+        JOIN 
+            parkingspot s ON r.SpotID = s.SpotID
+        WHERE 
+            p.PaymentStatus = 'Completed' OR p.PaymentStatus != 'Completed'
         ]]>
     </queryString>
 
     <!-- Fields in the report -->
-    <field name="spotID" class="java.lang.Integer"/>
-    <field name="parkingLotID" class="java.lang.Integer"/>
-    <field name="spotType" class="java.lang.String"/>
-    <field name="status" class="java.lang.String"/>
-    <field name="pricePerHour" class="java.math.BigDecimal"/>
+    <field name="TotalRevenue" class="java.lang.Integer"/>
+    <field name="OccupancyRate" class="java.lang.Integer"/>
+    <field name="UnpaidReservations" class="java.lang.Integer"/>
 
     <title>
         <band height="60">
@@ -32,28 +40,19 @@
         <band height="20">
             <textField>
                 <reportElement x="0" y="0" width="150" height="20"/>
-                <textFieldExpression><![CDATA[$F{spotID}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{TotalRevenue}]]></textFieldExpression>
             </textField>
 
             <textField>
                 <reportElement x="150" y="0" width="150" height="20"/>
-                <textFieldExpression><![CDATA[$F{parkingLotID}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{OccupancyRate}]]></textFieldExpression>
             </textField>
 
             <textField>
                 <reportElement x="300" y="0" width="100" height="20"/>
-                <textFieldExpression><![CDATA[$F{spotType}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{UnpaidReservations}]]></textFieldExpression>
             </textField>
 
-            <textField>
-                <reportElement x="400" y="0" width="100" height="20"/>
-                <textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
-            </textField>
-
-            <textField>
-                <reportElement x="500" y="0" width="100" height="20"/>
-                <textFieldExpression><![CDATA[$F{pricePerHour}]]></textFieldExpression>
-            </textField>
         </band>
     </detail>
 

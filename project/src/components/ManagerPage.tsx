@@ -95,30 +95,38 @@ export function ManagerPage() {
   };
   
  
-  const adjustPriceIfNeeded = (lotId: number, spots: any[]) => {
+  const adjustPriceIfNeeded = (lotId: number, spots: any[]) => { 
     const totalSpots = spots.length;
     const reservedOrOccupied = spots.filter(
       (spot) => spot.status === "Reserved" || spot.status === "Occupied"
     ).length;
   
     const percentageOccupied = (reservedOrOccupied / totalSpots) * 100;
-  
-    if (percentageOccupied > 50 && !priceAdjusted[lotId]) {
-      // Increase price by 10% once
-      spots.forEach((spot) => {
-        if (spot.status === "Available" || spot.status === "Reserved") {
-          spot.pricePerHour = spot.pricePerHour * 1.1;
-        }
-      });
-      setPriceAdjusted((prev) => ({ ...prev, [lotId]: true }));
-    } else if (percentageOccupied < 50 && priceAdjusted[lotId]) {
-      // Decrease price by 10% once
-      spots.forEach((spot) => {
-        if (spot.status === "Available" || spot.status === "Reserved") {
-          spot.pricePerHour = spot.pricePerHour * 0.9;
-        }
-      });
-      setPriceAdjusted((prev) => ({ ...prev, [lotId]: false }));
+    const pricingModel = parkingLots.find((lot) => lot.parkingLotID === lotId)?.pricingModel;
+    // Adjust prices based on pricing model
+    if (pricingModel === "Dynamic") {
+      if (percentageOccupied > 50 && !priceAdjusted[lotId]) {
+        // Increase price by 10% once
+        spots.forEach((spot) => {
+          if (spot.status === "Available" || spot.status === "Reserved") {
+            spot.pricePerHour = spot.pricePerHour * 1.1;
+          }
+        });
+        setPriceAdjusted((prev) => ({ ...prev, [lotId]: true }));
+      } else if (percentageOccupied < 50 && priceAdjusted[lotId]) {
+        // Decrease price by 10% once
+        spots.forEach((spot) => {
+          if (spot.status === "Available" || spot.status === "Reserved") {
+            spot.pricePerHour = spot.pricePerHour * 0.9;
+          }
+        });
+        setPriceAdjusted((prev) => ({ ...prev, [lotId]: false }));
+      }
+    } else if (pricingModel === "Fixed") {
+      // No price adjustment needed for fixed pricing
+      console.log(`Lot ${lotId} has fixed pricing. No adjustments made.`);
+    } else {
+      console.warn(`Unknown pricing model "${pricingModel}" for lot ${lotId}.`);
     }
   };
   const fetchParkingSpots = async (lotId: number) => {
@@ -127,7 +135,8 @@ export function ManagerPage() {
         `http://localhost:8080/api/manager/parkingspots?lotId=${lotId}`
       );
       const spots = response.data;
-  
+
+
       // Adjust price based on occupancy percentage
       adjustPriceIfNeeded(lotId, spots);
   
