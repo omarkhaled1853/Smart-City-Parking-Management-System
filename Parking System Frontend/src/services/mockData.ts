@@ -13,7 +13,7 @@ export const mockReservations: ReservationDTO[] = [
     },
     parkingLot: {
       name: "Downtown Parking Complex",
-      location: "123 Main Street",
+      location: "سيدي بشر, شارع ملك حفنى قبلى, مدينة الضباط بسيدي بشر, ميامي, المندرة, الإسكندرية, 21634, مصر",
       pricingModel: ParkingLotPricingModel.DYNAMIC
     }
   },

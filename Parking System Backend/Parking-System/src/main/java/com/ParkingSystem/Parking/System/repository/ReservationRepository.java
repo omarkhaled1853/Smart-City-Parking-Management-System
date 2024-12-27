@@ -1,5 +1,6 @@
 package com.ParkingSystem.Parking.System.repository;
 
+import com.ParkingSystem.Parking.System.dto.NearExpireReservationDTO;
 import com.ParkingSystem.Parking.System.dto.ReservationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.ParkingSystem.Parking.System.utils.DatabaseHandler.*;
-import static com.ParkingSystem.Parking.System.utils.mapper.toReservationDto;
+import static com.ParkingSystem.Parking.System.utils.Mapper.toNearExpireReservationDto;
+import static com.ParkingSystem.Parking.System.utils.Mapper.toReservationDto;
 
 @Repository
 public class ReservationRepository {
@@ -33,7 +35,6 @@ public class ReservationRepository {
             callableStatement = connection.prepareCall(sql);
             callableStatement.setInt("user_id", userId);
             resultSet = callableStatement.executeQuery();
-            reservationDTOList = new ArrayList<>();
             while (resultSet.next()) {
                 reservationDTOList.add(toReservationDto(resultSet));
             }
@@ -61,7 +62,6 @@ public class ReservationRepository {
             callableStatement.setInt("user_id", userId);
             callableStatement.setString("location", location);
             resultSet = callableStatement.executeQuery();
-            reservationDTOList = new ArrayList<>();
             while (resultSet.next()) {
                 reservationDTOList.add(toReservationDto(resultSet));
             }
@@ -74,5 +74,30 @@ public class ReservationRepository {
         }
 
         return reservationDTOList;
+    }
+
+    public List<NearExpireReservationDTO> getNearExpireReservations() {
+        Connection connection = null;
+        CallableStatement callableStatement = null;
+        ResultSet resultSet = null;
+        List<NearExpireReservationDTO> nearExpireReservationDTOList = new ArrayList<>();
+
+        try {
+            connection = getConnection(dataSource);
+            String sql = "{CALL GetNearExpireReservations()}";
+            callableStatement = connection.prepareCall(sql);
+            resultSet = callableStatement.executeQuery();
+            while (resultSet.next()) {
+                nearExpireReservationDTOList.add(toNearExpireReservationDto(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        } finally {
+            closeResultSet(resultSet);
+            closeCallableStatement(callableStatement);
+            closeConnection(connection);
+        }
+
+        return nearExpireReservationDTOList;
     }
 }

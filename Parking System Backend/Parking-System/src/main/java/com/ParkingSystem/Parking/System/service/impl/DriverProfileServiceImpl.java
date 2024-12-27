@@ -1,8 +1,9 @@
 package com.ParkingSystem.Parking.System.service.impl;
 
+import com.ParkingSystem.Parking.System.dto.NearExpireReservationDTO;
 import com.ParkingSystem.Parking.System.dto.ReservationDTO;
 import com.ParkingSystem.Parking.System.repository.ReservationRepository;
-import com.ParkingSystem.Parking.System.service.DriverProfileService;
+import com.ParkingSystem.Parking.System.service.interfaces.DriverProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +28,10 @@ public class DriverProfileServiceImpl implements DriverProfileService {
     @Override
     public List<ReservationDTO> getAllReservationsByLocation(int userId, String location) {
         return reservationRepository.getAllReservationsByLocation(userId, location);
+    }
+
+    @Override
+    public List<NearExpireReservationDTO> getNearExpireReservations() {
+        return reservationRepository.getNearExpireReservations();
     }
 }
