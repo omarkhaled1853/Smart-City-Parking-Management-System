@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Notification } from '../types/type';
 import { fetchNotifications, connectWebSocket } from '../api/api';
-
 interface NotificationContextType {
   notifications: (Notification & { read: boolean })[];
   showNotifications: boolean;
@@ -10,6 +9,8 @@ interface NotificationContextType {
   clearNotifications: () => void;
   markNotificationsAsRead: () => void;
   unreadCount: number;
+  managerId: number;
+  setUserId: (id: number) => void;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
@@ -17,6 +18,7 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<(Notification & { read: boolean })[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [managerId, setUserId] = useState<number>(5);  // You can set userId dynamically
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -24,7 +26,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     // Fetch initial notifications
     const loadNotifications = async () => {
       try {
-        const data = await fetchNotifications();
+        const data = await fetchNotifications(managerId);  // Fetch notifications for the correct user
         setNotifications(data.map((n: Notification) => ({ ...n, read: false })));
       } catch (error) {
         console.error('Failed to fetch notifications:', error);
@@ -33,13 +35,13 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
     loadNotifications();
 
-    // Connect to WebSocket
-    const cleanup = connectWebSocket(1, (notification: Notification) => {
+    // Connect to WebSocket using the dynamic userId
+    const cleanup = connectWebSocket(managerId, (notification: Notification) => {
       addNotification(notification);
     });
 
     return cleanup;
-  }, []);
+  }, [managerId]);  // Reconnect WebSocket if userId changes
 
   const addNotification = (notification: Notification) => {
     setNotifications(prev => [{
@@ -65,7 +67,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         addNotification,
         clearNotifications,
         markNotificationsAsRead,
-        unreadCount
+        unreadCount,
+        setUserId,
+        managerId,  // Provide userId to the context
       }}
     >
       {children}

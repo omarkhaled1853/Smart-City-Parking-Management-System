@@ -12,8 +12,19 @@ export function ManagerPage() {
     showNotifications, 
     setShowNotifications, 
     unreadCount,
-    markNotificationsAsRead 
+    markNotificationsAsRead,
+    managerId,
+    setUserId,
   } = useNotifications();
+
+  useEffect(() => {
+    // Example: Set managerId dynamically (e.g., from localStorage or an API call)
+    if (userId) {
+      setUserId(Number(userId));
+    } else {
+      setUserId(5); 
+    }
+  }, [setUserId]);
 
   const handleNotificationClick = () => {
     if (!showNotifications) {
@@ -65,7 +76,6 @@ export function ManagerPage() {
   }, [userId]);
 
   
-
   const fetchParkingLots = async (userId :number) => {
     try {
       console.log(userId);
@@ -268,9 +278,7 @@ export function ManagerPage() {
                 notifications.map((notification) => (
                   <div
                     key={notification.NotificationID}
-                    className={`p-4 border-b hover:bg-gray-50 ${
-                      !notification.read ? 'bg-blue-50' : ''
-                    }`}
+                    className={`p-4 border-b hover:bg-gray-50 ${!notification.read ? 'bg-blue-50' : ''}`}
                   >
                     <p className={`text-sm ${notification.type === 'error' ? 'text-red-600' : 'text-green-600'}`}>
                       {notification.message}

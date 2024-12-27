@@ -11,14 +11,23 @@ export const fetchNotifications = async (userId: number = 5) => {
 };
 
 let websocket: WebSocket | null = null;
+let currentUserId: number | null = null;
 
 export const connectWebSocket = (userId: number = 5, onMessage: (notification: Notification) => void) => {
-  if (websocket?.readyState === WebSocket.OPEN) return;
+  // If the userId hasn't changed and the WebSocket is open, do nothing
+  if (currentUserId === userId && websocket?.readyState === WebSocket.OPEN) return;
 
+  // Close the previous WebSocket if it exists
+  if (websocket) {
+    websocket.close();
+    websocket = null;
+  }
+
+  currentUserId = userId; // Update the current userId
   websocket = new WebSocket(`${WS_BASE_URL}/notification/subscribe/${userId}`);
 
   websocket.onopen = () => {
-    console.log('WebSocket connected');
+    console.log('WebSocket connected for user:', userId);
   };
 
   websocket.onmessage = (event) => {
@@ -31,9 +40,8 @@ export const connectWebSocket = (userId: number = 5, onMessage: (notification: N
   };
 
   websocket.onclose = () => {
-    console.log('WebSocket disconnected');
-    // Attempt to reconnect after 5 seconds
-    userId=5;
+    console.log('WebSocket disconnected for user:', userId);
+    // Attempt to reconnect after a delay
     setTimeout(() => connectWebSocket(userId, onMessage), 5000);
   };
 
@@ -42,5 +50,6 @@ export const connectWebSocket = (userId: number = 5, onMessage: (notification: N
       websocket.close();
       websocket = null;
     }
+    currentUserId = null; // Reset current userId on cleanup
   };
 };
