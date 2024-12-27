@@ -2,7 +2,7 @@ import { ReservationDTO } from '../types/reservation';
 import { mockReservations } from './mockData';
 
 const API_BASE_URL = 'http://localhost:8080/driver/profile';
-const USE_MOCK_DATA = false; // Toggle this for development
+const USE_MOCK_DATA = true; // Toggle this for development
 
 export const getDriverReservations = async (userId: number): Promise<ReservationDTO[]> => {
   if (USE_MOCK_DATA) {
