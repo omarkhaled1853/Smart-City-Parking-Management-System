@@ -13,7 +13,7 @@ interface SpotCardProps {
 
 const SpotTypeIcon = ({ type }: { type: string }) => {
   switch (type) {
-    case 'ELECTRIC':
+    case 'EVCHARGING':
       return <BatteryCharging className="w-5 h-5" />;
     case 'MOTOR':
       return <Bike className="w-5 h-5" />;

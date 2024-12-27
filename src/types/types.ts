@@ -8,7 +8,7 @@ export interface Lot {
 export interface Spot {
   id: number;
   lotId: number;
-  type: 'NORMAL' | 'ELECTRIC' | 'MOTOR' | 'DISABLED';
+  type: 'REGULAR' | 'EVCHARGING' | 'DISABLED';
   status: 'AVAILABLE' | 'OCCUPIED' | 'RESERVED';
   pricePerHour: number;
 }
