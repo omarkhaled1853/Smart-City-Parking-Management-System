@@ -36,23 +36,41 @@
         </band>
     </title>
 
+    <!-- Column Headers -->
+    <columnHeader>
+        <band height="20">
+            <staticText>
+                <reportElement x="0" y="0" width="150" height="20"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle"/>
+                <text><![CDATA[Total Revenue]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="150" y="0" width="150" height="20"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle"/>
+                <text><![CDATA[Occupancy Rate]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="300" y="0" width="100" height="20"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle"/>
+                <text><![CDATA[Unpaid Reservations]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
     <detail>
         <band height="20">
             <textField>
                 <reportElement x="0" y="0" width="150" height="20"/>
                 <textFieldExpression><![CDATA[$F{TotalRevenue}]]></textFieldExpression>
             </textField>
-
             <textField>
                 <reportElement x="150" y="0" width="150" height="20"/>
                 <textFieldExpression><![CDATA[$F{OccupancyRate}]]></textFieldExpression>
             </textField>
-
             <textField>
                 <reportElement x="300" y="0" width="100" height="20"/>
                 <textFieldExpression><![CDATA[$F{UnpaidReservations}]]></textFieldExpression>
             </textField>
-
         </band>
     </detail>
 

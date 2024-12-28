@@ -31,18 +31,37 @@
 			</textField>
 		</band>
 	</title>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="150" height="20" uuid="fb60c4b5-5972-419c-9f41-837b375a4b8b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Category]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="0" width="200" height="20" uuid="8dee2aa9-d1fc-49a9-99d0-19f3c80e92ae"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="0" width="150" height="20" uuid="263adbe6-e1a6-4a2b-be69-857c6918bb28"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Value]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
 	<detail>
 		<band height="20">
 			<textField>
-				<reportElement x="0" y="0" width="150" height="20" uuid="fe4531fa-121e-47a5-83b0-38210f1bbaf1"/>
+				<reportElement x="0" y="0" width="150" height="20" uuid="68cac396-4dfd-4f91-b107-887dce52bf35"/>
 				<textFieldExpression><![CDATA[$F{Category}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="150" y="0" width="200" height="20" uuid="084e19b3-e2ff-4ebc-881d-7de24ef3066c"/>
+				<reportElement x="150" y="0" width="200" height="20" uuid="ffd5f612-6ff4-4f09-b8b0-3022d3cf4489"/>
 				<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="350" y="0" width="150" height="20" uuid="b12822cc-b6af-4233-9c91-a93a85939525"/>
+				<reportElement x="350" y="0" width="150" height="20" uuid="c4475bbd-8825-4906-84ea-54d3cbea55b2"/>
 				<textFieldExpression><![CDATA[$F{Value}]]></textFieldExpression>
 			</textField>
 		</band>
