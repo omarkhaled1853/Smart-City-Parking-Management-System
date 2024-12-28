@@ -2,7 +2,7 @@ package com.example.Backend.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ParkingLotDTO {
+public class LotDTO {
     private int parkingLotID;
     private int UserID;
     private String name;

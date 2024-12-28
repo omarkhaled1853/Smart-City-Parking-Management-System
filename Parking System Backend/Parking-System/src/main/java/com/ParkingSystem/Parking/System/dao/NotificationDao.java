@@ -1,6 +1,6 @@
 package com.ParkingSystem.Parking.System.dao;
 
-import com.ParkingSystem.Parking.System.dto.HomeNotificationDTO;
+import com.ParkingSystem.Parking.System.dto.NotificationDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,40 +20,40 @@ public class NotificationDao {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public List<HomeNotificationDTO> getAllNotifications(int userId){
+    public List<NotificationDTO> getAllNotifications(int userId){
         String query = "SELECT * FROM Notification WHERE UserID = ?";
 
         return jdbcTemplate.query(query, this::mapRowToNotification, userId);
     }
-    public void sendNotificationToDriver(int userId, String message){
+    public void sendNotification(int userId, String message){
         String query = "INSERT INTO Notification (UserID, Message, SentAt) VALUES(?, ?, NOW())";
         jdbcTemplate.update(query, userId, message);
 
         String selectQuery = "SELECT * FROM Notification WHERE UserID = ? ORDER BY NotificationID DESC LIMIT 1";
-        HomeNotificationDTO homeNotificationDTO = jdbcTemplate.queryForObject(selectQuery, this::mapRowToNotification, userId);
+        NotificationDTO notificationDTO = jdbcTemplate.queryForObject(selectQuery, this::mapRowToNotification, userId);
 
-        messagingTemplate.convertAndSend("/notification/subscribe/" + userId, homeNotificationDTO);
+        messagingTemplate.convertAndSend("/notification/subscribe/" + userId, notificationDTO);
 
     }
-    private HomeNotificationDTO mapRowToNotification(ResultSet rs, int rowNum) throws SQLException{
-        HomeNotificationDTO homeNotificationDTO = HomeNotificationDTO
+    private NotificationDTO mapRowToNotification(ResultSet rs, int rowNum) throws SQLException{
+        NotificationDTO notificationDTO = NotificationDTO
                 .builder()
                 .NotificationID(rs.getInt("NotificationID"))
-                .UserID(rs.getInt("UserID"))
-                .Message(rs.getString("Message"))
-                .SentAt(rs.getTimestamp("SentAt").toLocalDateTime())
+                .userId(rs.getInt("UserID"))
+                .message(rs.getString("Message"))
+                .sentAt(rs.getTimestamp("SentAt").toLocalDateTime())
                 .build();
 
-                return homeNotificationDTO;
+                return notificationDTO;
     }
 
-    public void addNotification(HomeNotificationDTO homeNotificationDTO){
+    public void addNotification(NotificationDTO notificationDTO){
         String query = "INSERT INTO Notification (UserID, Message, SentAt) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(
                 query,
-                homeNotificationDTO.getUserID(),
-                homeNotificationDTO.getMessage(),
-                Timestamp.valueOf(homeNotificationDTO.getSentAt()));
+                notificationDTO.getUserId(),
+                notificationDTO.getMessage(),
+                Timestamp.valueOf(notificationDTO.getSentAt()));
     }
 }

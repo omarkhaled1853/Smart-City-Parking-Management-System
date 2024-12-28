@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.Backend.DTO.ParkingLotDTO;
+import com.example.Backend.DTO.LotDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +16,7 @@ public class ParkingLotRepository {
     @Autowired
     private DataSource dataSource;
 
-    public void addParkingLot(ParkingLotDTO parkingLot) throws SQLException {
+    public void addParkingLot(LotDTO parkingLot) throws SQLException {
         String query = "INSERT INTO parkinglot (Name, UserID, Location, Capacity, PricingModel) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -31,21 +31,21 @@ public class ParkingLotRepository {
         }
     }
 
-    public List<ParkingLotDTO> getAllParkingLots() throws SQLException {
+    public List<LotDTO> getAllParkingLots() throws SQLException {
         String query = "SELECT * FROM ParkingLot";
-        List<ParkingLotDTO> parkingLots = new ArrayList<>();
+        List<LotDTO> parkingLots = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
-                ParkingLotDTO parkingLot = new ParkingLotDTO();
+                LotDTO parkingLot = new LotDTO();
                 parkingLot.setParkingLotID(resultSet.getInt("ParkingLotID"));
                 parkingLot.setName(resultSet.getString("Name"));
                 parkingLot.setLocation(resultSet.getString("Location"));
                 parkingLot.setCapacity(resultSet.getInt("Capacity"));
-                parkingLot.setPricingModel(ParkingLotDTO.PricingModel.valueOf(resultSet.getString("PricingModel")));
+                parkingLot.setPricingModel(LotDTO.PricingModel.valueOf(resultSet.getString("PricingModel")));
 
                 parkingLots.add(parkingLot);
             }
@@ -54,9 +54,9 @@ public class ParkingLotRepository {
         return parkingLots;
     }
 
-    public List<ParkingLotDTO> getSpesficParkingLots(int userID) throws SQLException {
+    public List<LotDTO> getSpesficParkingLots(int userID) throws SQLException {
         String query = "SELECT * FROM ParkingLot WHERE UserID = ?";
-        List<ParkingLotDTO> parkingLots = new ArrayList<>();
+        List<LotDTO> parkingLots = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -64,13 +64,13 @@ public class ParkingLotRepository {
             preparedStatement.setInt(1, userID);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    ParkingLotDTO parkingLot = new ParkingLotDTO();
+                    LotDTO parkingLot = new LotDTO();
                     parkingLot.setUserID(resultSet.getInt("UserID"));
                     parkingLot.setParkingLotID(resultSet.getInt("ParkingLotID"));
                     parkingLot.setName(resultSet.getString("Name"));
                     parkingLot.setLocation(resultSet.getString("Location"));
                     parkingLot.setCapacity(resultSet.getInt("Capacity"));
-                    parkingLot.setPricingModel(ParkingLotDTO.PricingModel.valueOf(resultSet.getString("PricingModel")));
+                    parkingLot.setPricingModel(LotDTO.PricingModel.valueOf(resultSet.getString("PricingModel")));
 
                     parkingLots.add(parkingLot);
                 }

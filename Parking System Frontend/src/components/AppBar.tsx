@@ -24,7 +24,7 @@ export default function AppBar() {
     <div className="bg-white shadow-md px-4 py-2 fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <h1 
-          onClick={() => navigate('/')} 
+          onClick={() => navigate('/driver')} 
           className="text-xl font-semibold cursor-pointer"
         >
           Parking Home
@@ -69,7 +69,7 @@ export default function AppBar() {
             )}
           </div>
           <button
-            onClick={() => navigate('/profile')}
+            onClick={() => navigate('/driver/profile')}
             className="p-2 hover:bg-gray-100 rounded-full flex items-center gap-2"
           >
             <User className="w-6 h-6" />

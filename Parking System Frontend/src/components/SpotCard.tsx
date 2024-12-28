@@ -37,7 +37,7 @@ export default function SpotCard({ spot, showReservation = false, onSpotUpdate }
       const success = await updateSpotStatus({
         id: spot.spotID,
         status: 'Reserved',
-        userId: 1,
+        userId: 6,
         startDate: details.startDate,
         endDate: details.endDate,
         totalPrice: details.totalPrice,
@@ -65,7 +65,7 @@ export default function SpotCard({ spot, showReservation = false, onSpotUpdate }
     } catch (error) {
       addNotification({
         notificationID: Date.now(),
-        userId: 1,
+        userId: 6,
         message: 'Failed to reserve spot - Please try again',
         type: 'error',
         sentAt: new Date().toISOString()

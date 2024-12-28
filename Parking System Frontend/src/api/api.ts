@@ -28,7 +28,7 @@ export const updateSpotStatus = async (updateRequest: SpotUpdateRequest) => {
   return response.json();
 };
 
-export const fetchNotifications = async (userId: number = 1) => {
+export const fetchNotifications = async (userId: number = 6) => {
   const response = await fetch(`${API_BASE_URL}/notification/${userId}`);
   if (!response.ok) throw new Error('Failed to fetch notifications');
   return response.json();
@@ -36,7 +36,7 @@ export const fetchNotifications = async (userId: number = 1) => {
 
 let websocket: WebSocket | null = null;
 
-export const connectWebSocket = (userId: number = 1, onMessage: (notification: Notification) => void) => {
+export const connectWebSocket = (userId: number = 6, onMessage: (notification: Notification) => void) => {
   if (websocket?.readyState === WebSocket.OPEN) return;
 
   websocket = new WebSocket(`${WS_BASE_URL}/notification/subscribe/${userId}`);

@@ -46,7 +46,7 @@ public class SpotController {
 
         if(updated){
             String message = String.format("Spot #%d has been %s", spotId, status);
-            notificationService.sendNotificationToDriver(userId, message);
+            notificationService.sendNotification(userId, message);
         }
 
         return updated;

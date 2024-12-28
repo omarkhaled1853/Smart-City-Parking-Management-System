@@ -12,11 +12,11 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
-public class NotificationRepository {
+public class NotificationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public NotificationRepository(JdbcTemplate jdbcTemplate, SimpMessagingTemplate messagingTemplate){
+    public NotificationDao(JdbcTemplate jdbcTemplate, SimpMessagingTemplate messagingTemplate){
         this.jdbcTemplate = jdbcTemplate;
         this.messagingTemplate = messagingTemplate;
     }
@@ -26,7 +26,7 @@ public class NotificationRepository {
 
         return jdbcTemplate.query(query, this::mapRowToNotification, userId);
     }
-    public void sendNotificationToManager(int userId, String message){
+    public void sendNotification(int userId, String message){
         String query = "INSERT INTO notification (UserID, Message, sentAt) VALUES(?, ?, NOW())";
         jdbcTemplate.update(query, userId, message);
 

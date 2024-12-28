@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import { Bell } from 'lucide-react';
-import { useNotifications } from '../context/NotificationContext';
+import { useNotifications } from '../context/NotificationContextManager';
 
 
 
@@ -286,7 +286,7 @@ export function ManagerPage() {
               {notifications.length > 0 ? (
                 notifications.map((notification) => (
                   <div
-                    key={notification.NotificationID}
+                    key={notification.notificationID}
                     className={`p-4 border-b hover:bg-gray-50 ${!notification.read ? 'bg-blue-50' : ''}`}
                   >
                     <p className={`text-sm ${notification.type === 'error' ? 'text-red-600' : 'text-green-600'}`}>

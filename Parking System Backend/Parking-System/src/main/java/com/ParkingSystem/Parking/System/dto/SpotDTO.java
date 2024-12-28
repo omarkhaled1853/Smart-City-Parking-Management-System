@@ -1,8 +1,8 @@
-package com.example.Backend.DTO;
+package com.ParkingSystem.Parking.System.dto;
 
 import java.math.BigDecimal;
 
-public class ParkingSpotDTO {
+public class SpotDTO {
     private int spotID;
     private int parkingLotID;
     private SpotType spotType;

@@ -1,6 +1,6 @@
 package com.example.Backend.Repository;
 
-import com.example.Backend.DTO.ParkingSpotDTO;
+import com.example.Backend.DTO.SpotDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class ParkingSpotRepository {
     @Autowired
     private DataSource dataSource;
 
-    public void addParkingSpot(ParkingSpotDTO parkingSpot) throws SQLException {
+    public void addParkingSpot(SpotDTO parkingSpot) throws SQLException {
         String query = "INSERT INTO parkingspot (ParkingLotID, SpotType, Status, PricePerHour) VALUES (?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -28,20 +28,20 @@ public class ParkingSpotRepository {
         }
     }
 
-    public List<ParkingSpotDTO> getAllParkingSpots() throws SQLException {
+    public List<SpotDTO> getAllParkingSpots() throws SQLException {
         String query = "SELECT * FROM parkingspot";
-        List<ParkingSpotDTO> parkingSpots = new ArrayList<>();
+        List<SpotDTO> parkingSpots = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
-                ParkingSpotDTO parkingSpot = new ParkingSpotDTO();
+                SpotDTO parkingSpot = new SpotDTO();
                 parkingSpot.setSpotID(resultSet.getInt("SpotID"));
                 parkingSpot.setParkingLotID(resultSet.getInt("ParkingLotID"));
-                parkingSpot.setSpotType(ParkingSpotDTO.SpotType.valueOf(resultSet.getString("SpotType")));
-                parkingSpot.setStatus(ParkingSpotDTO.Status.valueOf(resultSet.getString("Status")));
+                parkingSpot.setSpotType(SpotDTO.SpotType.valueOf(resultSet.getString("SpotType")));
+                parkingSpot.setStatus(SpotDTO.Status.valueOf(resultSet.getString("Status")));
                 parkingSpot.setPricePerHour(resultSet.getBigDecimal("PricePerHour"));
 
                 parkingSpots.add(parkingSpot);
@@ -50,9 +50,9 @@ public class ParkingSpotRepository {
 
         return parkingSpots;
     }
-    public List<ParkingSpotDTO> getSpecificParkingSpots(int id) throws SQLException {
+    public List<SpotDTO> getSpecificParkingSpots(int id) throws SQLException {
         String query = "SELECT * FROM parkingspot WHERE ParkingLotID = ?";
-        List<ParkingSpotDTO> parkingSpots = new ArrayList<>();
+        List<SpotDTO> parkingSpots = new ArrayList<>();
 
         // Use PreparedStatement instead of Statement
         try (Connection connection = dataSource.getConnection();
@@ -65,11 +65,11 @@ public class ParkingSpotRepository {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     // Map result set to ParkingSpotDTO
-                    ParkingSpotDTO parkingSpot = new ParkingSpotDTO();
+                    SpotDTO parkingSpot = new SpotDTO();
                     parkingSpot.setSpotID(resultSet.getInt("SpotID"));
                     parkingSpot.setParkingLotID(resultSet.getInt("ParkingLotID"));
-                    parkingSpot.setSpotType(ParkingSpotDTO.SpotType.valueOf(resultSet.getString("SpotType")));
-                    parkingSpot.setStatus(ParkingSpotDTO.Status.valueOf(resultSet.getString("Status")));
+                    parkingSpot.setSpotType(SpotDTO.SpotType.valueOf(resultSet.getString("SpotType")));
+                    parkingSpot.setStatus(SpotDTO.Status.valueOf(resultSet.getString("Status")));
                     parkingSpot.setPricePerHour(resultSet.getBigDecimal("PricePerHour"));
 
                     parkingSpots.add(parkingSpot);
@@ -80,7 +80,7 @@ public class ParkingSpotRepository {
         return parkingSpots;
     }
 
-    public void updateParkingSpotStatus(int spotID, ParkingSpotDTO.Status status) throws SQLException {
+    public void updateParkingSpotStatus(int spotID, SpotDTO.Status status) throws SQLException {
         String query = "UPDATE parkingspot SET Status = ? WHERE SpotID = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {

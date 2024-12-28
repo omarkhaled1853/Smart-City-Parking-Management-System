@@ -1,5 +1,5 @@
 export interface Notification {
-  NotificationID: number;
+    notificationID: number;
     userId: number;
     message: string;
     sentAt: string;

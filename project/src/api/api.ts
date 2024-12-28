@@ -1,33 +1,48 @@
-import { Notification } from '../types/type';
+import { Notification, SpotUpdateRequest } from '../types/types';
+import { ReservationDTO } from '../types/reservation';
 
 const API_BASE_URL = 'http://localhost:8080';
 const WS_BASE_URL = 'ws://localhost:8080';
 
+export const fetchGarages = async () => {
+  const response = await fetch(`${API_BASE_URL}/garages`);
+  if (!response.ok) throw new Error('Failed to fetch garages');
+  return response.json();
+};
 
-export const fetchNotifications = async (userId: number = 5) => {
+export const fetchSpotsByLotId = async (lotId: number) => {
+  const response = await fetch(`${API_BASE_URL}/garages/${lotId}`);
+  if (!response.ok) throw new Error('Failed to fetch spots');
+  return response.json();
+};
+
+export const updateSpotStatus = async (updateRequest: SpotUpdateRequest) => {
+  const response = await fetch(`${API_BASE_URL}/garages/update`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updateRequest),
+  });
+  if (!response.ok) throw new Error('Failed to update spot status');
+  return response.json();
+};
+
+export const fetchNotifications = async (userId: number = 6) => {
   const response = await fetch(`${API_BASE_URL}/notification/${userId}`);
   if (!response.ok) throw new Error('Failed to fetch notifications');
   return response.json();
 };
 
 let websocket: WebSocket | null = null;
-let currentUserId: number | null = null;
 
-export const connectWebSocket = (userId: number = 5, onMessage: (notification: Notification) => void) => {
-  // If the userId hasn't changed and the WebSocket is open, do nothing
-  if (currentUserId === userId && websocket?.readyState === WebSocket.OPEN) return;
+export const connectWebSocket = (userId: number = 6, onMessage: (notification: Notification) => void) => {
+  if (websocket?.readyState === WebSocket.OPEN) return;
 
-  // Close the previous WebSocket if it exists
-  if (websocket) {
-    websocket.close();
-    websocket = null;
-  }
-
-  currentUserId = userId; // Update the current userId
   websocket = new WebSocket(`${WS_BASE_URL}/notification/subscribe/${userId}`);
 
   websocket.onopen = () => {
-    console.log('WebSocket connected for user:', userId);
+    console.log('WebSocket connected');
   };
 
   websocket.onmessage = (event) => {
@@ -40,8 +55,8 @@ export const connectWebSocket = (userId: number = 5, onMessage: (notification: N
   };
 
   websocket.onclose = () => {
-    console.log('WebSocket disconnected for user:', userId);
-    // Attempt to reconnect after a delay
+    console.log('WebSocket disconnected');
+    // Attempt to reconnect after 5 seconds
     setTimeout(() => connectWebSocket(userId, onMessage), 5000);
   };
 
@@ -50,6 +65,58 @@ export const connectWebSocket = (userId: number = 5, onMessage: (notification: N
       websocket.close();
       websocket = null;
     }
-    currentUserId = null; // Reset current userId on cleanup
   };
 };
+
+export const getDriverReservations = async (userId: number): Promise<ReservationDTO[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/driver/profile/reservations/${userId}`);
+    
+    if (response.status === 204) {
+      return [];
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.map((reservation: any) => ({
+      ...reservation,
+      startTime: new Date(reservation.startTime),
+      endTime: new Date(reservation.endTime)
+    }));
+  } catch (error) {
+    console.error('Error fetching reservations:', error);
+    throw new Error('Failed to fetch reservations. Please try again later.');
+  }
+};
+
+export const searchReservations = async (userId: number, location: string): Promise<ReservationDTO[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/driver/profile/reservations/search/${userId}?location=${encodeURIComponent(location)}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (response.status === 204) {
+      return [];
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.map((reservation: any) => ({
+      ...reservation,
+      startTime: new Date(reservation.startTime),
+      endTime: new Date(reservation.endTime)
+    }));
+  } catch (error) {
+    console.error('Error searching reservations:', error);
+    throw new Error('Failed to search reservations. Please try again later.');
+  }
+}

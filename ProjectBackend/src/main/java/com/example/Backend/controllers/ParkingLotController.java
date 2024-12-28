@@ -2,8 +2,8 @@ package com.example.Backend.controllers;
 
 
 
-import com.example.Backend.DTO.ParkingLotDTO;
-import com.example.Backend.DTO.ParkingSpotDTO;
+import com.example.Backend.DTO.LotDTO;
+import com.example.Backend.DTO.SpotDTO;
 import com.example.Backend.Repository.ParkingLotRepository;
 import com.example.Backend.Repository.ParkingSpotRepository;
 import com.example.Backend.services.ParkingLotService;
@@ -29,7 +29,7 @@ public class ParkingLotController {
 
     // Parking Lot Endpoints
     @PostMapping("/parkinglots")
-    public String addParkingLot(@RequestBody ParkingLotDTO parkingLot) {
+    public String addParkingLot(@RequestBody LotDTO parkingLot) {
         try {
             parkingLotRepository.addParkingLot(parkingLot);
             return "Parking lot added successfully.";
@@ -39,7 +39,7 @@ public class ParkingLotController {
     }
 
     @GetMapping("/parkinglots")
-    public List<ParkingLotDTO> getAllParkingLots() {
+    public List<LotDTO> getAllParkingLots() {
         try {
             return parkingLotRepository.getAllParkingLots();
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class ParkingLotController {
         }
     }
     @GetMapping("/parkinglots/{id}")
-    public List<ParkingLotDTO> getSpesficParkingLots(@PathVariable int id) {
+    public List<LotDTO> getSpesficParkingLots(@PathVariable int id) {
         try {
             return parkingLotRepository.getSpesficParkingLots(id);
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public class ParkingLotController {
 
     // Parking Spot Endpoints
     @PostMapping("/parkingspots")
-    public String addParkingSpot(@RequestBody ParkingSpotDTO parkingSpot) {
+    public String addParkingSpot(@RequestBody SpotDTO parkingSpot) {
         try {
             parkingSpotRepository.addParkingSpot(parkingSpot);
             return "Parking spot added successfully.";
@@ -86,7 +86,7 @@ public class ParkingLotController {
     //     }
     // }
     @GetMapping("/parkingspots")
-    public List<ParkingSpotDTO> getSpecificParkingSpots(@RequestParam(required = false) Integer lotId) {
+    public List<SpotDTO> getSpecificParkingSpots(@RequestParam(required = false) Integer lotId) {
         try {
             return parkingSpotRepository.getSpecificParkingSpots(lotId);
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class ParkingLotController {
     @PutMapping("/parkingspots/{id}/status")
     public String updateParkingSpotStatus(@PathVariable int id, @RequestParam String status) {
         try {
-            ParkingSpotDTO.Status newStatus = ParkingSpotDTO.Status.valueOf(status);
+            SpotDTO.Status newStatus = SpotDTO.Status.valueOf(status);
             parkingSpotRepository.updateParkingSpotStatus(id, newStatus);
             return "Parking spot status updated successfully.";
         } catch (Exception e) {

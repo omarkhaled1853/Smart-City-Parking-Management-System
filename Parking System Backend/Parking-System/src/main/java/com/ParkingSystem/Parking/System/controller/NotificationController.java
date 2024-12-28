@@ -1,6 +1,6 @@
 package com.ParkingSystem.Parking.System.controller;
 
-import com.ParkingSystem.Parking.System.dto.HomeNotificationDTO;
+import com.ParkingSystem.Parking.System.dto.NotificationDTO;
 import com.ParkingSystem.Parking.System.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class NotificationController {
     }
 
     @GetMapping("/{userId}")
-    public List<HomeNotificationDTO> getAllNotification(@PathVariable int userId){
+    public List<NotificationDTO> getAllNotification(@PathVariable int userId){
         return notificationService.getAllNotifications(userId);
     }
 
