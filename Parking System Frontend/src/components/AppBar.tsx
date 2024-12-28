@@ -27,7 +27,7 @@ export default function AppBar() {
           onClick={() => navigate('/')} 
           className="text-xl font-semibold cursor-pointer"
         >
-          Parking Garage
+          Parking Home
         </h1>
         <div className="flex items-center gap-4">
           <div className="relative">

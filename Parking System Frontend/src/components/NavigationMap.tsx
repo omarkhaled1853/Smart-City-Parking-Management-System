@@ -21,7 +21,7 @@ interface NavigationMapProps {
 function RouteLayer({ source, destination }: { source: L.LatLng, destination: L.LatLng }) {
   const map = useMap();
   const initialFitRef = useRef(false);
-  
+
   useEffect(() => {
     // Create a line between source and destination
     const routeLine = L.polyline([source, destination], {

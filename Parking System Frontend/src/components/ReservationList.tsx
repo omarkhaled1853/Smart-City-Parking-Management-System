@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { getDriverReservations, searchReservations } from '../services/api';
+import { getDriverReservations, searchReservations } from '../api/api';
 import { ReservationDTO } from '../types/reservation';
 import { ReservationCard } from './ReservationCard';
-import { SearchBar } from './SearchBar';
+import { SearchBar } from './ProfileSearchBar';
 import { CarFront, AlertCircle } from 'lucide-react';
 
 interface ReservationListProps {

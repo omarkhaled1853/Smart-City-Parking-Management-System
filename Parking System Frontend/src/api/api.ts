@@ -1,4 +1,5 @@
 import { Notification, SpotUpdateRequest } from '../types/types';
+import { ReservationDTO } from '../types/reservation';
 
 const API_BASE_URL = 'http://localhost:8080';
 const WS_BASE_URL = 'ws://localhost:8080';
@@ -66,3 +67,56 @@ export const connectWebSocket = (userId: number = 1, onMessage: (notification: N
     }
   };
 };
+
+export const getDriverReservations = async (userId: number): Promise<ReservationDTO[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/driver/profile/reservations/${userId}`);
+    
+    if (response.status === 204) {
+      return [];
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.map((reservation: any) => ({
+      ...reservation,
+      startTime: new Date(reservation.startTime),
+      endTime: new Date(reservation.endTime)
+    }));
+  } catch (error) {
+    console.error('Error fetching reservations:', error);
+    throw new Error('Failed to fetch reservations. Please try again later.');
+  }
+};
+
+export const searchReservations = async (userId: number, location: string): Promise<ReservationDTO[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/driver/profile/reservations/search/${userId}?location=${encodeURIComponent(location)}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (response.status === 204) {
+      return [];
+    }
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.map((reservation: any) => ({
+      ...reservation,
+      startTime: new Date(reservation.startTime),
+      endTime: new Date(reservation.endTime)
+    }));
+  } catch (error) {
+    console.error('Error searching reservations:', error);
+    throw new Error('Failed to search reservations. Please try again later.');
+  }
+}
