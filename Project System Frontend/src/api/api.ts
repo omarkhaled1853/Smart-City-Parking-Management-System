@@ -30,6 +30,7 @@ export const updateSpotStatus = async (updateRequest: SpotUpdateRequest) => {
 };
 
 export const fetchNotifications = async (userId: number) => {
+  // userId = Number(Cookies.get('userId'));
   console.log(userId)
   const response = await fetch(`${API_BASE_URL}/notification/${userId}`);
   if (!response.ok) throw new Error('Failed to fetch notifications');
@@ -59,7 +60,7 @@ export const connectWebSocket = (userId: number, onMessage: (notification: Notif
   websocket.onclose = () => {
     console.log('WebSocket disconnected');
     // Attempt to reconnect after 5 seconds
-    setTimeout(() => connectWebSocket(userId, onMessage), 5000);
+    setTimeout(() => connectWebSocket(userId, onMessage), 5000000);
   };
 
   return () => {

@@ -48,7 +48,7 @@ export function AdminPage() {
   const [newSpot, setNewSpot] = useState({
     parkingLotID: 0,
     spotType: "",
-    status: "Available",
+    status: "AVAILABLE",
     pricePerHour: 0,
   });
 
@@ -130,7 +130,7 @@ export function AdminPage() {
   const adjustPriceIfNeeded = (lotId: number, spots: any[]) => {
     const totalSpots = spots.length;
     const reservedOrOccupied = spots.filter(
-      (spot) => spot.status === "Reserved" || spot.status === "Occupied"
+      (spot) => spot.status === "RESERVED" || spot.status === "OCCUPIED"
     ).length;
   
     const percentageOccupied = (reservedOrOccupied / totalSpots) * 100;
@@ -146,32 +146,28 @@ export function AdminPage() {
     }
   
     // Adjust prices if needed based on occupancy
-    if (pricingModel === "Dynamic") {
+    if (pricingModel === "DYNAMIC") {
     if (percentageOccupied > 50 && !priceAdjusted[lotId]) {
       spots.forEach((spot) => {
-        if (spot.status === "Available" || spot.status === "Reserved") {
+        if (spot.status === "AVAILABLE" || spot.status === "RESERVED") {
           spot.pricePerHour = spot.pricePerHour * 1.1; // Increase price by 10%
         }
       });
       setPriceAdjusted((prev) => ({ ...prev, [lotId]: true }));
     } else if (percentageOccupied < 50 && priceAdjusted[lotId]) {
       spots.forEach((spot) => {
-        if (spot.status === "Available" || spot.status === "Reserved") {
+        if (spot.status === "AVAILABLE" || spot.status === "RESERVED") {
           spot.pricePerHour = spot.pricePerHour * 0.9; // Decrease price by 10%
         }
       });
       setPriceAdjusted((prev) => ({ ...prev, [lotId]: false }));
     }
   }
-  else if (percentageOccupied < 50 && priceAdjusted[lotId]){
-     // Decrease price by 10% once
-     spots.forEach((spot) => {
-      if (spot.status === "Available" || spot.status === "Reserved") {
-        spot.pricePerHour = spot.pricePerHour * 0.9;
-      }
-    });
-    setPriceAdjusted((prev) => ({ ...prev, [lotId]: false }));
+  else if (pricingModel === "STATIC") {
+    // No price adjustment needed for fixed pricing
+    console.log(`Lot ${lotId} has fixed pricing. No adjustments made.`);
   }
+  
   };
   const fetchParkingSpots = async (lotId: number) => {
     try {
@@ -289,7 +285,7 @@ export function AdminPage() {
       console.log(newSpot);
       await axios.post("http://localhost:8080/api/manager/parkingspots", newSpot);
       alert("Parking Spot added successfully!");
-      setNewSpot({ parkingLotID: 0, spotType: "", status: "Available", pricePerHour: 0}); // Reset form
+      setNewSpot({ parkingLotID: 0, spotType: "", status: "AVAILABLE", pricePerHour: 0}); // Reset form
       setShowAddSpotForm(false); // Close the form
       fetchParkingLots();
       } catch (error) {
@@ -324,9 +320,9 @@ export function AdminPage() {
                     <span className="font-semibold">Status: </span>
                     <span
                       className={
-                        spot.status === "Available"
+                        spot.status === "AVAILABLE"
                           ? "text-green-500 font-medium"
-                          : spot.status === "Occupied"
+                          : spot.status === "OCCUPIED"
                           ? "text-red-500 font-medium"
                           : "text-yellow-500 font-medium"
                       }
@@ -388,17 +384,12 @@ export function AdminPage() {
 
 <section className="mb-8">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Reports</h2>
-        <button
-          onClick={() => generateReport("parkinglots")}
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mr-4"
-        >
-          Generate Parking Lots Report
-        </button>
+        
         <button
           onClick={() => generateReport("parkingspots")}
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mr-4"
         >
-          Generate Parking Spots Report
+          Generate Parking analysis Report
         </button>
 
         <button
@@ -434,9 +425,9 @@ export function AdminPage() {
                     }
                     className="w-full border border-gray-300 rounded p-2"
                   >
-                    <option value="Available">Available</option>
-                    <option value="Occupied">Occupied</option>
-                    <option value="Reserved">Reserved</option>
+                    <option value="AVAILABLE">Available</option>
+                    <option value="OCCUPIED">Occupied</option>
+                    <option value="RESERVED">Reserved</option>
                   </select>
                 </div>
               )}
@@ -505,8 +496,8 @@ export function AdminPage() {
                 className="border p-2 w-full"
               >
                 <option value="">Select Pricing Model</option>
-                <option value="Static">Static</option>
-                <option value="Dynamic">Dynamic</option>
+                <option value="STATIC">Static</option>
+                <option value="DYNAMIC">Dynamic</option>
               </select>
 
               {/* Dropdown for selecting manager (UserID) */}
@@ -555,9 +546,9 @@ export function AdminPage() {
                 className="border p-2 w-full"
               >
                 <option value="">Select Spot Type</option>
-                <option value="Regular">Regular</option>
-                <option value="Disabled">Disabled</option>
-                <option value="EVCharging">EVCharging</option>
+                <option value="REGULAR">Regular</option>
+                <option value="DISABLED">Disabled</option>
+                <option value="EVCHARGING">EVCharging</option>
               </select>
 
               {/* Status Selector */}
@@ -566,9 +557,9 @@ export function AdminPage() {
                 onChange={(e) => setNewSpot({ ...newSpot, status: e.target.value })}
                 className="border p-2 w-full"
               >
-                <option value="Available">Available</option>
-                <option value="Occupied">Occupied</option>
-                <option value="Reserved">Reserved</option>
+                <option value="AVAILABLE">Available</option>
+                <option value="OCCUPIED">Occupied</option>
+                <option value="RESERVED">Reserved</option>
               </select>
 
               {/* Price Per Hour */}

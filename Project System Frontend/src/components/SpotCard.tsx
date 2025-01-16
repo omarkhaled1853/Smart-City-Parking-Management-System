@@ -40,7 +40,7 @@ export default function SpotCard({ spot, showReservation = false, onSpotUpdate }
       setIsReserving(true);
       const success = await updateSpotStatus({
         id: spot.spotID,
-        status: 'Reserved',
+        status: 'RESERVED',
         userId: userId,
         startDate: details.startDate,
         endDate: details.endDate,

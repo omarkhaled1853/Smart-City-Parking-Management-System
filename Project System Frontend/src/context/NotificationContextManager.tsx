@@ -28,6 +28,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     // Fetch initial notifications
     const loadNotifications = async () => {
       try {
+        console.log(userId);
         const data = await fetchNotifications(managerId);  // Fetch notifications for the correct user
         setNotifications(data.map((n: Notification) => ({ ...n, read: false })));
       } catch (error) {

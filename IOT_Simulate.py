@@ -9,8 +9,8 @@ logging.basicConfig(filename="sensor_updates.log", level=logging.INFO, format="%
 # Database connection
 db = mysql.connector.connect(
     host="localhost",
-    user="root",
-    password="09517536248",
+    user="SmartCityParking",
+    password="SmartCityParking",
     database="smartcityparking"
 )
 cursor = db.cursor()
@@ -26,7 +26,7 @@ def update_spot_status():
             # Randomly update status for a spot
             for spot in spots:
                 spot_id = spot[0]
-                new_status = random.choice(['Available', 'Occupied'])
+                new_status = random.choice(['AVAILABLE', 'OCCUPIED'])
                 cursor.execute(
                     "UPDATE parkingspot SET Status = %s WHERE SpotID = %s",
                     (new_status, spot_id)

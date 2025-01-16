@@ -25,6 +25,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     // Fetch initial notifications
     // const userId = Number(Cookies.get('userId'));
+    console.log(userId)
     const loadNotifications = async () => {
       try {
         const data = await fetchNotifications(userId);
@@ -76,6 +77,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 }
 
 export function useNotifications() {
+  console.log(userId)
   const context = useContext(NotificationContext);
   if (context === undefined) {
     throw new Error('useNotifications must be used within a NotificationProvider');
